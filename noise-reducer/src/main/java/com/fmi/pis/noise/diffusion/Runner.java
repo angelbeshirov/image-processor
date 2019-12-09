@@ -17,19 +17,19 @@ public class Runner {
         try {
 
             ImageProcessor p3 = new ImageProcessor();
-            p3.setFilter(new AnisotropicDiffusionFilter(0.1, 20, 50));
-            File file = new File("src/main/resources/noisy_test_2.png");
-            p3.process(file, new File("src/main/resources/noisy_output_1_1.png"));
-
-            // diffusion
-            p3.setFilter(new IsotropicDiffusionFilter());
-            File file_diff = new File("src/main/resources/noisy_diffusion.png");
-            p3.process(file, file_diff);
+//            p3.setFilter(new AnisotropicDiffusionFilter(0.1, 20, 50));
+//            File file = new File("src/main/resources/noisy_test_3.png");
+//            p3.process(file, new File("src/main/resources/noisy_output_1_1.png"));
+//
+//            // diffusion
+//            p3.setFilter(new IsotropicDiffusionFilter());
+//            File file_diff = new File("src/main/resources/noisy_diffusion.png");
+//            p3.process(file, file_diff);
             //new ImageProcessor().process(new File("src/main/resources/noisy.png"), new File("src/main/resources/noisy_output_2.png"));
 
 
             ImageProcessor p4 = new ImageProcessor();
-            p4.setFilter(new AnisotropicDiffusionFilterVariant(20));
+            p4.setFilter(new IsotropicDiffusionFilter());
             p4.process(new File("src/main/resources/noisy.png"), new File("src/main/resources/noisy_output_4.png"));
 
 

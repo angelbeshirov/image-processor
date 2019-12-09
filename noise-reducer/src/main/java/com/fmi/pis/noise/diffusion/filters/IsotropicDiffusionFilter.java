@@ -1,5 +1,7 @@
 package com.fmi.pis.noise.diffusion.filters;
 
+import com.fmi.pis.noise.util.Util;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -31,6 +33,7 @@ public class IsotropicDiffusionFilter implements Filter {
      */
     @Override
     public BufferedImage filter(BufferedImage img) {
+        BufferedImage bf = Util.deepCopy(img);
         for (int k = 0; k < this.iterations; k++) {
             for (int i = 1; i < img.getWidth() - 1; i++) {
                 for (int j = 1; j < img.getHeight() - 1; j++) {

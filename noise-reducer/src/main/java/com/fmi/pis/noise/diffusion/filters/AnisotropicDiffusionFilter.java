@@ -2,6 +2,8 @@ package com.fmi.pis.noise.diffusion.filters;
 
 /// imports
 
+import com.fmi.pis.noise.util.Util;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -25,7 +27,7 @@ public class AnisotropicDiffusionFilter implements Filter {
 
     @Override
     public BufferedImage filter(BufferedImage image) {
-        //BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+        BufferedImage result = Util.deepCopy(image);
         for (int k = 0; k < this.iterations; k++) {
             for (int i = 1; i < image.getWidth() - 1; i++) {
                 for (int j = 1; j < image.getHeight() - 1; j++) {
@@ -107,14 +109,14 @@ public class AnisotropicDiffusionFilter implements Filter {
 
                     /// set new "diffused" pixel values: red, green and blue
                     Color color = new Color(red_new, green_new, blue_new);
-                    image.setRGB(i, j, color.getRGB());
+                    result.setRGB(i, j, color.getRGB());
                     //result.setRGB(i, j, color.getRGB());
                 }
             }
             //image = image2;
         }
 
-        return image;
+        return result;
     }
 
     protected double flux_derivative(double intensity) {

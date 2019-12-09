@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class Runner {
 
-    // used for demonstration of the results and the loss of data in different percentages
     public static void main(final String[] args) throws IOException {
         final BufferedImage bufferedImage = ImageIO.read(new File("src\\main\\resources\\mgdth.jpg"));
         final SingularValueDecomposition svd = new SingularValueDecomposition(bufferedImage);

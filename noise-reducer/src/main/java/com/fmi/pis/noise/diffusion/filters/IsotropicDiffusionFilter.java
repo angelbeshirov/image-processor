@@ -5,12 +5,15 @@ import com.fmi.pis.noise.util.Util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Reduces noise from image based on the isotropic diffusion.
+ */
 public class IsotropicDiffusionFilter implements Filter {
     private final int iterations;
     private final double lambda;
 
     /**
-     * @brief default setup for isotropic diffusion filter
+     * Default setup for isotropic diffusion filter
      */
     public IsotropicDiffusionFilter() {
         this.iterations = 20;
@@ -18,9 +21,10 @@ public class IsotropicDiffusionFilter implements Filter {
     }
 
     /**
+     * Setup for isotropic diffusion filter.
+     *
      * @param iterations number of iterations
-     * @param lambda     width of one timestep
-     * @brief adjust setup for isotropic diffusion filter
+     * @param lambda     width of one time step
      */
     public IsotropicDiffusionFilter(int iterations, double lambda) {
         this.iterations = iterations;
@@ -28,20 +32,22 @@ public class IsotropicDiffusionFilter implements Filter {
     }
 
     /**
-     * @param img
-     * @brief
+     * Performs the noise reduction based on the isotropic diffusion.
+     *
+     * @param image the image to be processed
+     * @return the processed image
      */
     @Override
-    public BufferedImage filter(BufferedImage img) {
-        BufferedImage bf = Util.deepCopy(img);
+    public BufferedImage filter(BufferedImage image) {
+        BufferedImage buff = Util.deepCopy(image);
         for (int k = 0; k < this.iterations; k++) {
-            for (int i = 1; i < img.getWidth() - 1; i++) {
-                for (int j = 1; j < img.getHeight() - 1; j++) {
-                    int rgbNorth = img.getRGB(i, j - 1);
-                    int rgbSouth = img.getRGB(i, j + 1);
-                    int rgbWest = img.getRGB(i - 1, j);
-                    int rgbEast = img.getRGB(i + 1, j);
-                    int rgbCenter = img.getRGB(i, j);
+            for (int i = 1; i < buff.getWidth() - 1; i++) {
+                for (int j = 1; j < buff.getHeight() - 1; j++) {
+                    int rgbNorth = buff.getRGB(i, j - 1);
+                    int rgbSouth = buff.getRGB(i, j + 1);
+                    int rgbWest = buff.getRGB(i - 1, j);
+                    int rgbEast = buff.getRGB(i + 1, j);
+                    int rgbCenter = buff.getRGB(i, j);
 
                     int red = (int) (((rgbCenter >> 16) & 0xFF) +
                             this.lambda * (-4 * ((rgbCenter >> 16) & 0xFF) +
@@ -65,12 +71,12 @@ public class IsotropicDiffusionFilter implements Filter {
                                     (rgbNorth & 0xFF))));
 
                     Color color = new Color(red, green, blue);
-                    img.setRGB(i, j, color.getRGB());
+                    buff.setRGB(i, j, color.getRGB());
                 }
             }
         }
 
-        return img;
+        return buff;
     }
 }
 

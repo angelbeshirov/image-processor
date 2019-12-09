@@ -6,6 +6,12 @@ import java.awt.image.WritableRaster;
 
 public class Util {
 
+    /**
+     * Makes a deep copy of a {@link BufferedImage}
+     *
+     * @param bufferedImage the buffered image to be copied
+     * @return a copy of the buffered image
+     */
     public static BufferedImage deepCopy(BufferedImage bufferedImage) {
         ColorModel cm = bufferedImage.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();

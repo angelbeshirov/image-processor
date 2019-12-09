@@ -15,45 +15,26 @@ public class ImageProcessor {
         this.filter = filter;
     }
 
-
-    /// methods
-
     /**
-     * @param source
-     * @param output
-     * @brief
+     * Processes the image with the filter currently set up.
+     *
+     * @param source the source filter, containing the image
+     * @param output the output file where the image will be saved
      */
     public void process(final File source, final File output) {
-        /// load image
         loadImage(source);
-
-        /// pre process image
-        preProcess();
-
         BufferedImage res = filter.filter(image);
-
-        /// post process image
-        postProcess();
-
-        /// save image
-        saveImage(res, output);
+        if (!saveImage(res, output)) {
+            System.out.println("Error while processing the image!");
+        }
     }
 
     /**
-     * @brief
+     * Loads the image from the file into the memory.
+     *
+     * @param file the file to load
      */
-    protected void preProcess() {
-        // TODO IF needed
-    }
-
-    /**
-     * @brief
-     */
-    protected void postProcess() {
-        // TODO IF needed
-    }
-
-    protected void loadImage(final File file) {
+    private void loadImage(final File file) {
         try {
             this.image = ImageIO.read(file);
         } catch (IOException ex) {
@@ -61,7 +42,14 @@ public class ImageProcessor {
         }
     }
 
-    protected boolean saveImage(final BufferedImage bufferedImage, final File file) {
+    /**
+     * Saves the {@link java.io.BufferedReader} into the file.
+     *
+     * @param bufferedImage the image to be saved
+     * @param file          the output file
+     * @return {@code true} if the saving of the image was successful and {@code false} otherwise
+     */
+    private boolean saveImage(final BufferedImage bufferedImage, final File file) {
         boolean result = true;
         try {
             ImageIO.write(bufferedImage, "png", file);

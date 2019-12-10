@@ -1,17 +1,12 @@
 package com.fmi.rest;
 
 import com.fmi.rest.model.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-@Repository
-public class UserRepository {
-    public boolean createUser(User user) {
-        return false;
-    }
+// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
+// CRUD refers Create, Read, Update, Delete
 
-    public User getUser() {
-        return null;
-    }
+public interface UserRepository extends CrudRepository<User, Integer> {
 
-
+    User findByEmail(String email);
 }

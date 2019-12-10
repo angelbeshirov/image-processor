@@ -1,0 +1,27 @@
+.mock-image-display {
+    width: 80%;
+    margin: 20px auto;
+    align-content: center;
+    display: flex;
+}
+
+.mock-img {
+    position: relative;
+    text-align: center;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-60%, 275%);
+}
+
+img {
+    border: 1px solid black;
+    margin-right: 20px;
+}
+
+p {
+    font-weight: bold;
+}

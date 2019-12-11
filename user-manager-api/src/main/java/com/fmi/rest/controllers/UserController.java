@@ -1,6 +1,5 @@
 package com.fmi.rest.controllers;
 
-import com.fmi.rest.UserRepository;
 import com.fmi.rest.model.User;
 import com.fmi.rest.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ public class UserController {
 
     private UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }

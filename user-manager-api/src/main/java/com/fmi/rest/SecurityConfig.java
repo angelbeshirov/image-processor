@@ -27,16 +27,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public DataSource dataSource() {
-//        DriverManagerDataSource ds = new DriverManagerDataSource();
-//        ds.setDriverClassName(com.mysql.jdbc.Driver.class.getName());
-//        ds.setUrl("jdbc:mysql://localhost:9300/imageprocessor");
-//        ds.setUsername("root");
-//        ds.setPassword("");
-//        return ds;
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();

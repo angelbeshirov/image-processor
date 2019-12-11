@@ -2,9 +2,17 @@ package com.fmi.rest.controllers;
 
 import com.fmi.rest.model.User;
 import com.fmi.rest.services.UserService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.print.attribute.standard.Media;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author angel.beshirov
@@ -42,5 +50,12 @@ public class UserController {
     public @ResponseBody
     User findByEmail(@RequestParam(name = "email") String email) {
         return userService.findByEmail(email);
+    }
+
+    @GetMapping(value = "/get_image", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public @ResponseBody byte[] getImage() throws IOException {
+        File file = new File("src/main/resources/test_image.jpg");
+        InputStream in = new FileInputStream(file);
+        return IOUtils.toByteArray(in);
     }
 }

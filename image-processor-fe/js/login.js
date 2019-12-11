@@ -19,9 +19,9 @@ function handleResponse(xhr) {
         if (xhr.response) {
             var errorElement = document.querySelector(".error");
             errorElement.appendChild(document.createTextNode(xhr.response));
-        } 
+        }
     } else if (xhr.status == 200) {
-        //window.location.replace("index.php");
+        window.location.replace("index.php");
     }
 }
 

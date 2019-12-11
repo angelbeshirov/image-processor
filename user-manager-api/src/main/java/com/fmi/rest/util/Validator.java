@@ -1,7 +1,6 @@
-package com.fmi.rest;
+package com.fmi.rest.util;
 
 import com.fmi.rest.model.User;
-import org.springframework.stereotype.Service;
 
 /**
  * @author angel.beshirov

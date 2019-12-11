@@ -67,5 +67,4 @@ function handleResponse(xhr) {
         var successElement = document.querySelector("#register").parentElement.querySelector(".message");
         successElement.appendChild(document.createTextNode("Вашата регистрация беше успешна."));
     }
-    
 }

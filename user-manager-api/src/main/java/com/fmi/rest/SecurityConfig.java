@@ -30,7 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Needed in order to enable CORS (cross-origin requests, currently requests come from localhost:80 and this is running on localhost:8081)
-     * @return
+     *
+     * @return cross origin resource sharing config source
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -39,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type", "X-Requested-With", "accept",
+                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -1,10 +1,10 @@
 function ajax(url, settings, callback) {
     if (settings) {
         var xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
         xhr.onload = function() {
             console.log("returned");
             if (callback) {
-                //var response = JSON.parse(xhr.response);
                 callback(xhr);
             }
         };
@@ -15,6 +15,8 @@ function ajax(url, settings, callback) {
         xhr.send(settings.data || null);
     }
 }
+
+
 
 function resetInput() {
     var errors = document.getElementsByClassName("field-input");

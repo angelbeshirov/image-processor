@@ -1,4 +1,5 @@
 (function displayLogin() {
+    console.log(document.cookie);
     var cookie = getCookie("username");
     var loginInfo = document.getElementById("login-info");
 
@@ -11,7 +12,7 @@
         var displayText = decodeURIComponent(cookie).replace("+", " ");
         loginInfo.appendChild(document.createTextNode("Здравейте, " + displayText));
     } else {
-        //ajax("user_api.php/logout", {}, handleResponse);
+        //ajax("http://localhost:8081/users/logout", {}, handleResponse);
     }
 })();
 

@@ -1,7 +1,7 @@
-<?php
+<!-- php
 	require "util/util.php";
 	should_redirect_logged_in();
-?>
+ > -->
 
 <!DOCTYPE html>
 <html>
@@ -17,6 +17,7 @@
 
 	<script type="text/javascript" src="js/navigation.js" defer></script>
 	<script type="text/javascript" src="js/register.js" defer></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
 	<script type="text/javascript" src="js/rest.js"></script>
 </head>

@@ -1,5 +1,5 @@
 (function buildNavigation() {
-    console.log("BUILDING NAVIGATION :!@@@@");
+    console.log("BUILDING NAVIGATION");
     ajax("http://localhost:8081/users/is-logged-in", {}, populateNavigation);
 }());
 
@@ -76,7 +76,9 @@ function addNavigationElementsForLoggedUser(ul) {
     aLogout.innerHTML = "Изход";
     aLogout.href = "#";
     aLogout.classList.add("navigation");
-    aLogout.addEventListener("click", function(event) { ajax("user_api.php/logout", {}, handleResponseFromLogout); });
+    aLogout.addEventListener("click", function(event) { 
+        ajax("http://localhost:8081/users/logout", {}, handleResponseFromLogout);
+    });
 
     liLogout.appendChild(aLogout);
     liMyFiles.appendChild(aMyFiles);
@@ -91,8 +93,8 @@ function addNavigationElementsForLoggedUser(ul) {
     ul.appendChild(liHome);
 }
 
-function handleResponseFromLogout(response) {
-    if (response) {
+function handleResponseFromLogout(xhr) {
+    if (xhr.status == 200) {
         window.location = "index.php";
     }
 }

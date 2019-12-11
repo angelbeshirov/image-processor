@@ -1,9 +1,16 @@
 package com.fmi.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     @Id
@@ -29,30 +36,42 @@ public class User {
         this.email = email;
     }
 
+    @JsonGetter("id")
+    public Integer getId() {
+        return id;
+    }
+
+    @JsonGetter("username")
     public String getUsername() {
         return username;
     }
 
+    @JsonGetter("password")
     public String getPassword() {
         return password;
     }
 
+    @JsonGetter("email")
     public String getEmail() {
         return email;
     }
 
+    @JsonSetter("id")
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @JsonSetter("username")
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @JsonSetter("password")
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @JsonSetter("email")
     public void setEmail(String email) {
         this.email = email;
     }

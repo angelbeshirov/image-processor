@@ -44,7 +44,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService, ObjectMapper objectMapper,  @Value("${upload.files.dir}") String filesDirectory) {
+    public UserController(UserService userService, ObjectMapper objectMapper, @Value("${upload.files.dir}") String filesDirectory) {
         this.userService = userService;
         this.objectMapper = objectMapper;
     }
@@ -116,7 +116,8 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
+    public ResponseEntity<String> logout(HttpServletResponse response, HttpSession httpSession) {
+        httpSession.removeAttribute(ID);
         Util.deleteSecureHttpOnlyCookie(EMAIL, response);
         Util.deleteSecureHttpOnlyCookie(ID, response);
         Util.deleteInsecureCookie(USERNAME, response);

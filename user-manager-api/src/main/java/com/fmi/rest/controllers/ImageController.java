@@ -20,13 +20,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * @author angel.beshirov
  */
 // TODO this whole controller ideally should be in a separate spring boot application image-manager-api
-    // TODO but this adds complexity to cookie and session sharing
+// TODO but this adds complexity to cookie and session sharing
 @Controller
 @RequestMapping("/images")
 public class ImageController {
@@ -109,15 +108,36 @@ public class ImageController {
     public byte[] getImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
         Integer id = (Integer) session.getAttribute(UserController.ID);
         byte[] result = null;
-        if(id != null) {
+        if (id != null) {
             String location = imageService.findImageLocation(id, filename);
             File file = new File(location);
             InputStream in = new FileInputStream(file);
             result = IOUtils.toByteArray(in);
+            in.close();
         }
 
-
         return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
+        Integer id = (Integer) session.getAttribute(UserController.ID);
+        HttpStatus status = HttpStatus.OK;
+        if (id != null) {
+            Integer fileId = imageService.findImageId(id, filename);
+            String location = imageService.findImageLocation(id, filename);
+            imageService.deleteById(fileId);
+
+            File file = new File(location);
+            if (file.delete()) {
+                System.out.printf("File %s deleted successfully", filename);
+            } else {
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+        }
+
+        return new ResponseEntity<>(status);
     }
 
     private boolean handleDirectories(String path) {

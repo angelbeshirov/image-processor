@@ -1,11 +1,5 @@
 package com.fmi.rest.config;
 
-/**
- * The security config.
- *
- * @author angel.beshirov
- */
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -21,6 +15,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * The security config.
+ *
+ * @author angel.beshirov
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

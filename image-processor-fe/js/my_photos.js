@@ -81,6 +81,7 @@ function addActionsToFile() {
         a.style.display = "none";
         
         a.href = "http://localhost:8081/images/download?file=" + fileName;
+        a.setAttribute('target', '_parent');
         a.setAttribute("download", fileName);
         a.click();
         document.body.appendChild(a);
@@ -108,15 +109,16 @@ function getParentN(element, num) {
 function deleteFile(fileName) {
     var settings = {};
     settings["method"] = "DELETE";
-    //ajax("docs_api.php/delete_file/:" + encodeURIComponent(fileName), settings, handleResponseFromDelete);
+    // will this work with cyrilic filename? encodeURI?
+    ajax("http://localhost:8081/images/delete?file=" + fileName, settings, handleResponseFromDelete);
 }
 
-function handleResponseFromDelete(response) {
-    if (response.error_description) {
-        alert(response.error_description);
-    } else {
+function handleResponseFromDelete(xhr) {
+    if (xhr.status == 200) {
         clearTable();
         retrieveAndPopulate();
+    } else {
+        alert("There was an error while deleting this file!");
     }
 }
 

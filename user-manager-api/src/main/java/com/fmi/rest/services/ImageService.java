@@ -25,6 +25,10 @@ public class ImageService {
         return imageRepository.findById(id);
     }
 
+    public void deleteById(Integer id) {
+        imageRepository.deleteById(id);
+    }
+
     public Image saveImage(Image image) {
         return imageRepository.save(image);
     }
@@ -47,6 +51,19 @@ public class ImageService {
         for (Image image : imagesForUser) {
             if (Objects.equals(image.getName(), filename)) {
                 result = image.getLocation();
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    public Integer findImageId(Integer id, String filename) {
+        Integer result = null;
+        Iterable<Image> imagesForUser = imageRepository.findAllByUploadedBy(id);
+        for (Image image : imagesForUser) {
+            if (Objects.equals(image.getName(), filename)) {
+                result = image.getId();
                 break;
             }
         }

@@ -1,10 +1,17 @@
 package com.fmi.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "images")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Image {
 
     @Id
@@ -51,58 +58,72 @@ public class Image {
         this.extension = extension;
     }
 
+    @JsonGetter("id")
     public Integer getId() {
         return id;
     }
 
+    @JsonGetter("name")
     public String getName() {
         return name;
     }
 
+    @JsonGetter("location")
     public String getLocation() {
         return location;
     }
 
+    @JsonGetter("uploadedOn")
     public LocalDate getUploadedOn() {
         return uploadedOn;
     }
 
+    @JsonGetter("uploadedBy")
     public Integer getUploadedBy() {
         return uploadedBy;
     }
 
+    @JsonGetter("size")
     public Integer getSize() {
         return size;
     }
 
+    @JsonGetter("extension")
     public Integer getExtension() {
         return extension;
     }
 
+    @JsonSetter("id")
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @JsonSetter("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    @JsonSetter("location")
     public void setLocation(String location) {
         this.location = location;
     }
 
+    @JsonSetter("uploadedOn")
     public void setUploadedOn(LocalDate uploadedOn) {
         this.uploadedOn = uploadedOn;
     }
 
+    @JsonSetter("uploadedBy")
     public void setUploadedBy(Integer uploadedBy) {
         this.uploadedBy = uploadedBy;
     }
 
+    @JsonSetter("size")
     public void setSize(Integer size) {
         this.size = size;
     }
 
+    @JsonSetter("extension")
     public void setExtension(Integer extension) {
         this.extension = extension;
     }

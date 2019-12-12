@@ -1,6 +1,6 @@
 package com.fmi.rest.services;
 
-import com.fmi.rest.UserRepository;
+import com.fmi.rest.repositories.UserRepository;
 import com.fmi.rest.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

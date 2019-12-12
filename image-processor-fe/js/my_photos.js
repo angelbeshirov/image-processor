@@ -1,5 +1,5 @@
 window.onload = function() {
-    //retrieveAndPopulate();
+    retrieveAndPopulate();
 };
 
 window.onclick = function(event) {
@@ -16,32 +16,32 @@ window.onclick = function(event) {
 }
 
 function retrieveAndPopulate() {
-    //ajax("docs_api.php/retrieve", {}, populate);
+    ajax("http://localhost:8081/images/getAll", {}, populate);
 }
 
 function clearTable() {
     document.querySelector("#main-table tbody").innerHTML = "";
 }
 
-function populate(response) {
-    if (response) {
+function populate(xhr) {
+    if (xhr.status == 200 && xhr.response) {
         var tableBody = document.querySelector("#main-table tbody");
-        //for (var i = 0; i < response.files.length; i++) {
-        for (var i = 0; i < 5; i++) {
-            //var file = response.files[i];
+        console.log(xhr.response);
+        var files = JSON.parse(xhr.response);
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
             var tr = document.createElement("tr");
-            // populateRow(tr, file);
-            populateRow(tr, "sth");
+            populateRow(tr, file);
             tableBody.appendChild(tr);
         }
     }
 }
 
 function populateRow(tr, file) {
-    tr.appendChild(createTD("asdasd", ["column1"]));
-    tr.appendChild(createTD("asdasd" + " B", ["column2"]));
-    tr.appendChild(createTD("asdasd", ["column3"]));
-    tr.appendChild(createTD("asdasd", ["column4"]));
+    tr.appendChild(createTD(file.name, ["column1"]));
+    tr.appendChild(createTD(file.size + " B", ["column2"]));
+    tr.appendChild(createTD(file.uploadedOn, ["column3"]));
+    tr.appendChild(createTD(file.extension, ["column4"]));
     tr.appendChild(addActionsToFile());
 }
 
@@ -77,7 +77,15 @@ function addActionsToFile() {
     }));
     divChild.appendChild(createA("Изтегли", "#", function(event) {
         var fileName = getParentN(event.target, 4).querySelector(".column1").innerHTML;
-        window.location = "docs_api.php/download?file=" + fileName;
+        var a = document.createElement("a");
+        a.style.display = "none";
+        
+        a.href = "http://localhost:8081/images/download?file=" + fileName;
+        a.setAttribute("download", fileName);
+        a.click();
+        document.body.appendChild(a);
+        window.URL.revokeObjectURL(a.href);
+        document.body.removeChild(a);
     }));
 
     divWrapper.appendChild(divChild);
@@ -121,17 +129,6 @@ function createA(value, href, callback) {
     return el;
 }
 
-function handleResponseFromSharing(response) {
-    if (response.error_description) {
-        alert(response.error_description);
-    } else {
-        alert("Файлът беше успешно споделен с " + response.email);
-        var modal = document.querySelector("#shareWith");
-        modal.style.display = "none";
-        modal.innerHTML = "";
-    }
-}
-
 function upload_file(e) {
     var fileobj;
     e.preventDefault();
@@ -159,17 +156,16 @@ function file_upload(files) {
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.open('POST', 'http://localhost:8081/images/upload', true);
-        //xhr.open('POST', 'http://localhost:8081/users/upload', true);
         
         xhr.onload = function() {
-            if (xhr.response) {
-                var response = JSON.parse(xhr.response);
-                if (response.error_description) {
-                    alert(response.error_description);
-                }
+            if (xhr.status == 401) {
+                alert("The session has expired!");
+                ajax("http://localhost:8081/users/logout", {});
+            } else if(xhr.status == 500) {
+                alert("Internal server error. Something went astray :(");
             } else {
-                //clearTable();
-                //retrieveAndPopulate();
+                clearTable();
+                retrieveAndPopulate();
             }
         };
         xhr.send(formData);

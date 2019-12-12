@@ -136,12 +136,4 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
-    @ResponseBody
-    @GetMapping(value = "/get_image", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public byte[] getImage() throws IOException {
-        File file = new File("src/main/resources/test_image.jpg");
-        InputStream in = new FileInputStream(file);
-        return IOUtils.toByteArray(in);
-    }
-
 }

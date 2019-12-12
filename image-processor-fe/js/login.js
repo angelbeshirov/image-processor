@@ -14,7 +14,6 @@ document.getElementById("login-form").addEventListener("submit", function(event)
 
 function handleResponse(xhr) {
     console.log(xhr);
-    console.log("Cookie is:" + document.cookie);
     if(xhr.status != 200 && xhr.response) {
         if (xhr.response) {
             var errorElement = document.querySelector(".error");

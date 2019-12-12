@@ -8,22 +8,19 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class Util {
 
-    public static final String EMAIL = "email";
-    public static final String USERNAME = "username";
-
     private Util() {
 
     }
 
-    public static void addSecureHttpOnlyCookie(HttpServletResponse response, String email) {
-        Cookie cookie = new Cookie(EMAIL, email);
+    public static void addSecureCookie(String name, String value, HttpServletResponse response) {
+        Cookie cookie = new Cookie(name, value);
         cookie.setMaxAge(2 * 60 * 60); // expires in 2 hours
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
 
-    public static void addCookieForUsername(HttpServletResponse response, String username) {
-        Cookie cookie = new Cookie(USERNAME, username);
+    public static void addInsecureCookie(String name, String value, HttpServletResponse response) {
+        Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(false);
         cookie.setSecure(false);
         cookie.setPath("/");
@@ -32,15 +29,15 @@ public class Util {
         response.addCookie(cookie);
     }
 
-    public static void deleteSecureHttpOnlyCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie(EMAIL, null);
+    public static void deleteSecureHttpOnlyCookie(String name, HttpServletResponse response) {
+        Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0); // deleted
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
 
-    public static void deleteCookieForUsername(HttpServletResponse response) {
-        Cookie cookie = new Cookie(USERNAME, null);
+    public static void deleteInsecureCookie(String name, HttpServletResponse response) {
+        Cookie cookie = new Cookie(name, null);
         cookie.setMaxAge(0); // deleted
         cookie.setHttpOnly(false);
         cookie.setSecure(false);

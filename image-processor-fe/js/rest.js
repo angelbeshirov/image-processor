@@ -3,7 +3,6 @@ function ajax(url, settings, callback) {
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;
         xhr.onload = function() {
-            console.log("returned");
             if (callback) {
                 callback(xhr);
             }
@@ -23,14 +22,6 @@ function resetInput() {
     Array.prototype.forEach.call(errors, function(el) {
         el.value = '';
     });
-}
-
-function getCookie(nameOfCookie) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + nameOfCookie + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-
-    return "";
 }
 
 function updateLogin() {

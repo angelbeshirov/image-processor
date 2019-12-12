@@ -8,15 +8,18 @@ import com.fmi.rest.model.User;
 import com.fmi.rest.services.UserService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,17 +30,21 @@ import java.io.InputStream;
  */
 @Controller
 @RequestMapping("/users")
-
 public class UserController {
 
-    public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
+    private static final String EMAIL_ALREADY_EXISTS = "Email already exists";
+    private static final String EMAIL = "email";
+    private static final String USERNAME = "username";
+    public static final String ID = "id";
+    public static final String WINDOWS_FILE_SEPARATOR = "\\";
 
     // autowired
     private UserService userService;
     private ObjectMapper objectMapper;
 
+
     @Autowired
-    public UserController(UserService userService, ObjectMapper objectMapper) {
+    public UserController(UserService userService, ObjectMapper objectMapper,  @Value("${upload.files.dir}") String filesDirectory) {
         this.userService = userService;
         this.objectMapper = objectMapper;
     }
@@ -47,8 +54,8 @@ public class UserController {
      * {"username":"asd","password":"asd","email":"asdasdasd"}
      */
     // http://localhost:8081/users/register
-    @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody String payload) {
         String error = "";
         System.out.println(payload);
@@ -73,9 +80,9 @@ public class UserController {
         return new ResponseEntity<>(error, status);
     }
 
-    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<String> login(@RequestBody String payload, HttpServletResponse response) {
+    @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> login(@RequestBody String payload, HttpServletResponse response, HttpSession session) {
         String error = null;
         System.out.println(payload);
         HttpStatus status = HttpStatus.OK;
@@ -87,8 +94,10 @@ public class UserController {
                 error = "Wrong email or password";
             } else {
                 System.out.println("Successfully logged in");
-                Util.addCookieForUsername(response, databaseUser.getUsername());
-                Util.addSecureHttpOnlyCookie(response, databaseUser.getEmail());
+                session.setAttribute(ID, databaseUser.getId());
+                Util.addInsecureCookie(USERNAME, databaseUser.getUsername(), response);
+                Util.addSecureCookie(EMAIL, databaseUser.getEmail(), response);
+                Util.addSecureCookie(ID, databaseUser.getId().toString(), response);
             }
         } catch (IOException e) {
             System.out.println("Error while parsing JSON for login");
@@ -102,14 +111,15 @@ public class UserController {
     }
 
     @GetMapping("/is-logged-in")
-    public ResponseEntity<String> isLoggedIn(@CookieValue(value = "email", required = false) String cookie) {
+    public ResponseEntity<String> isLoggedIn(@CookieValue(value = EMAIL, required = false) String cookie) {
         return new ResponseEntity<>(cookie != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-        Util.deleteCookieForUsername(response);
-        Util.deleteSecureHttpOnlyCookie(response);
+        Util.deleteSecureHttpOnlyCookie(EMAIL, response);
+        Util.deleteSecureHttpOnlyCookie(ID, response);
+        Util.deleteInsecureCookie(USERNAME, response);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -126,11 +136,12 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
-    @GetMapping(value = "/get_image", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     @ResponseBody
+    @GetMapping(value = "/get_image", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public byte[] getImage() throws IOException {
         File file = new File("src/main/resources/test_image.jpg");
         InputStream in = new FileInputStream(file);
         return IOUtils.toByteArray(in);
     }
+
 }

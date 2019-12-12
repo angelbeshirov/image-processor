@@ -1,5 +1,8 @@
 package com.fmi.pis;
 
+import com.fmi.pis.kafka.StreamsBuilderTest;
+import org.apache.kafka.streams.StreamsBuilder;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,6 +19,9 @@ public class Runner {
         } catch (final IOException ex) {
             System.out.println("Error while performing I/O operations with the images.");
         }
+
+        StreamsBuilderTest streamsBuilderTest = new StreamsBuilderTest();
+        streamsBuilderTest.createStream();
 
     }
 }

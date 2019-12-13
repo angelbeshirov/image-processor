@@ -9,7 +9,6 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="css/navigation.css">
 
 	<script type="text/javascript" src="js/editor.js" defer></script>
-	<script type="text/javascript" src="js/websocket.js" defer></script>
 	<script type="text/javascript" src="js/navigation.js" defer></script>
 	<script type="text/javascript" src="js/rest.js"></script>
 </head>
@@ -22,8 +21,20 @@
 			<h3 id="title">Снимка: </h3>
 		</div>
 	</header>
-	<div id="menu"></div>
-	<img id="item_previewer" src="" />
-	<button id="send"> Изпрати </button>
+	<div id="menu">
+		<select id="select_action">
+			<option value="0">Компресиране</option>
+			<option value="1">Премахване на шум</option>
+			<option value="2">Отрази спрямо централен вертикал</option> <!-- ПО ДОБРО ИМЕ??? -->
+			<option value="3">Сива снимка</option> <!-- ПО ДОБРО ИМЕ??? -->
+			<option value="4">Бяла снимка</option> <!-- ПО ДОБРО ИМЕ??? -->
+			<option value="5">Извличане на остър контур</option>
+		</select>
+		<button id="send">Изпрати</button>
+	</div>
+	<div id="item_container">
+		<img id="item_previewer" src="" />
+	</div>
+	
 </body>
 </html>

@@ -29,20 +29,27 @@ header {
     text-align: center;
 }
 
+#item_container {
+    display: block;
+    margin: 1px solid red;
+    width: 70%;
+    height: 70%;
+}
+
 #item_previewer {
     width: auto;
     height: auto;
-    max-width: 80%;
-    max-height: 80%;
+    max-width: 100%;
+    max-height: 100%;
     display: block;
     border: 3px solid black;
     margin: 30px auto 0 auto;
 }
 
 #menu {
-    float: right;
     /* margin-right: 50px; should not be so close to the end*/
-    display: block;
+    /* display: block; */
+    float: right;
     border: 3px solid black;
     margin: 30px auto 0 auto;
     border: 2px solid red;
@@ -55,6 +62,7 @@ header {
     width: 150px;
     display: block;
     margin: 0 auto 0 auto;
+    bottom: 10px;
 }
 
 #gradient {

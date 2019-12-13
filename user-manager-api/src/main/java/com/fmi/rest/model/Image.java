@@ -22,7 +22,10 @@ public class Image {
     private LocalDate uploadedOn;
     private Integer uploadedBy;
     private Long size;
-    private Integer extension;
+
+    @ManyToOne
+    @JoinColumn(name = "extension")
+    private Extension extension;
 
     public Image() {
     }
@@ -32,7 +35,7 @@ public class Image {
                  final LocalDate uploadedOn,
                  final Integer uploadedBy,
                  final Long size,
-                 final Integer extension) {
+                 final Extension extension) {
         this.name = name;
         this.location = location;
         this.uploadedOn = uploadedOn;
@@ -48,7 +51,7 @@ public class Image {
                  final Integer uploadedBy,
                  final Long size,
                  final String email,
-                 final Integer extension) {
+                 final Extension extension) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -89,7 +92,7 @@ public class Image {
     }
 
     @JsonGetter("extension")
-    public Integer getExtension() {
+    public Extension getExtension() {
         return extension;
     }
 
@@ -124,7 +127,7 @@ public class Image {
     }
 
     @JsonSetter("extension")
-    public void setExtension(final Integer extension) {
+    public void setExtension(final Extension extension) {
         this.extension = extension;
     }
 }

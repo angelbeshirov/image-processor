@@ -1,10 +1,13 @@
 package com.fmi.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fmi.rest.model.Extension;
 import com.fmi.rest.model.Image;
+import com.fmi.rest.services.ExtensionService;
 import com.fmi.rest.services.ImageService;
 import com.fmi.rest.util.Constants;
 import com.fmi.rest.util.Util;
+import com.fmi.rest.util.Validator;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +39,7 @@ public class ImageController {
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
     private final ImageService imageService;
+    private final ExtensionService extensionService;
     private final ObjectMapper objectMapper;
     private final String directory;
 
@@ -43,9 +47,11 @@ public class ImageController {
     // TODO why the HTTPONLY SECURE COOKIE IS NOT AVAILABLE IN THIS CLASS (reason why I am using the session)
     @Autowired
     public ImageController(final ImageService imageService,
+                           final ExtensionService extensionService,
                            final ObjectMapper objectMapper,
                            @Value("${upload.files.dir}") final String filesDirectory) {
         this.imageService = imageService;
+        this.extensionService = extensionService;
         this.objectMapper = objectMapper;
         this.directory = filesDirectory;
     }
@@ -67,7 +73,8 @@ public class ImageController {
                     final String location = path + FILE_SEPARATOR + name;
                     final File file = new File(location);
                     if (!file.exists() && Util.transfer(uploadedFile, file)) {
-                        imageService.saveImage(new Image(name, location, LocalDate.now(), id, uploadedFile.getSize(), getExtension(name)));
+                        final Extension extension = getExtension(name);
+                        imageService.saveImage(new Image(name, location, LocalDate.now(), id, uploadedFile.getSize(), extension));
                     }
                 }
                 status = HttpStatus.OK;
@@ -84,7 +91,7 @@ public class ImageController {
     @ResponseBody
     @GetMapping(value = "/getAll")
     @Description("Returns all images for the logged in user.")
-    public ResponseEntity<String> uploadingPost(final HttpSession session) {
+    public ResponseEntity<String> getAllImages(final HttpSession session) {
         HttpStatus status = HttpStatus.OK;
         String response = null;
         final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
@@ -93,6 +100,7 @@ public class ImageController {
                 final Iterable<Image> images = imageService.findAllUploadedBy(id);
                 response = objectMapper.writeValueAsString(images);
             } catch (IOException ex) {
+                System.out.println(ex);
                 status = HttpStatus.BAD_REQUEST;
             }
 
@@ -174,19 +182,12 @@ public class ImageController {
         return directory.exists() || directory.mkdirs();
     }
 
-    // TODO this should be retrieved from the database based on the extension of the file, if the extension is wrote return BAD_REQUEST 400 STATUS CODE
-    private Integer getExtension(final String name) {
-        if (name == null) {
-            return -1; // boom boom, shouldnt happen
-        }
-        if (name.endsWith(".png")) {
-            return 1;
-        } else if (name.endsWith(".jpg")) {
-            return 2;
-        } else if (name.endsWith(".jpeg")) {
-            return 3;
+    private Extension getExtension(final String name) {
+        if(name == null || !name.contains(".")) {
+            return null;
         }
 
-        return -1;
+        final String extension = name.substring(name.indexOf('.'));
+        return extensionService.findByValue(extension);
     }
 }

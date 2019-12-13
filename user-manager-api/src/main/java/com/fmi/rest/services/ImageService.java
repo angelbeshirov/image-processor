@@ -17,19 +17,19 @@ public class ImageService {
     private ImageRepository imageRepository;
 
     @Autowired
-    public ImageService(ImageRepository imageRepository) {
+    public ImageService(final ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
 
-    public Optional<Image> findById(Integer id) {
+    public Optional<Image> findById(final Integer id) {
         return imageRepository.findById(id);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(final Integer id) {
         imageRepository.deleteById(id);
     }
 
-    public Image saveImage(Image image) {
+    public Image saveImage(final Image image) {
         return imageRepository.save(image);
     }
 
@@ -37,18 +37,18 @@ public class ImageService {
         return imageRepository.findAll();
     }
 
-    public Image findUploadedBy(Integer uploadedBy) {
+    public Image findUploadedBy(final Integer uploadedBy) {
         return imageRepository.findByUploadedBy(uploadedBy);
     }
 
-    public Iterable<Image> findAllUploadedBy(Integer uploadedBy) {
+    public Iterable<Image> findAllUploadedBy(final Integer uploadedBy) {
         return imageRepository.findAllByUploadedBy(uploadedBy);
     }
 
-    public String findImageLocation(Integer id, String filename) {
+    public String findImageLocation(final Integer id, final String filename) {
         String result = "";
-        Iterable<Image> imagesForUser = imageRepository.findAllByUploadedBy(id);
-        for (Image image : imagesForUser) {
+        final Iterable<Image> imagesForUser = imageRepository.findAllByUploadedBy(id);
+        for (final Image image : imagesForUser) {
             if (Objects.equals(image.getName(), filename)) {
                 result = image.getLocation();
                 break;
@@ -58,10 +58,10 @@ public class ImageService {
         return result;
     }
 
-    public Integer findImageId(Integer id, String filename) {
+    public Integer findImageId(final Integer id, final String filename) {
         Integer result = null;
-        Iterable<Image> imagesForUser = imageRepository.findAllByUploadedBy(id);
-        for (Image image : imagesForUser) {
+        final Iterable<Image> imagesForUser = imageRepository.findAllByUploadedBy(id);
+        for (final Image image : imagesForUser) {
             if (Objects.equals(image.getName(), filename)) {
                 result = image.getId();
                 break;

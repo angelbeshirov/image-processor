@@ -15,15 +15,15 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User findByEmail(String email) {
+    public User findByEmail(final String email) {
         return userRepository.findByEmail(email);
     }
 
-    public User saveUser(User user) {
+    public User saveUser(final User user) {
         return userRepository.save(user);
     }
 

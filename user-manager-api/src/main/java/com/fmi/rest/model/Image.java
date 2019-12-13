@@ -21,18 +21,18 @@ public class Image {
     private String location;
     private LocalDate uploadedOn;
     private Integer uploadedBy;
-    private Integer size;
+    private Long size;
     private Integer extension;
 
     public Image() {
     }
 
-    public Image(String name,
-                 String location,
-                 LocalDate uploadedOn,
-                 Integer uploadedBy,
-                 Integer size,
-                 Integer extension) {
+    public Image(final String name,
+                 final String location,
+                 final LocalDate uploadedOn,
+                 final Integer uploadedBy,
+                 final Long size,
+                 final Integer extension) {
         this.name = name;
         this.location = location;
         this.uploadedOn = uploadedOn;
@@ -41,14 +41,14 @@ public class Image {
         this.extension = extension;
     }
 
-    public Image(Integer id,
-                 String name,
-                 String location,
-                 LocalDate uploadedOn,
-                 Integer uploadedBy,
-                 Integer size,
-                 String email,
-                 Integer extension) {
+    public Image(final Integer id,
+                 final String name,
+                 final String location,
+                 final LocalDate uploadedOn,
+                 final Integer uploadedBy,
+                 final Long size,
+                 final String email,
+                 final Integer extension) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -84,7 +84,7 @@ public class Image {
     }
 
     @JsonGetter("size")
-    public Integer getSize() {
+    public Long getSize() {
         return size;
     }
 
@@ -94,37 +94,37 @@ public class Image {
     }
 
     @JsonSetter("id")
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
     @JsonSetter("name")
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
     @JsonSetter("location")
-    public void setLocation(String location) {
+    public void setLocation(final String location) {
         this.location = location;
     }
 
     @JsonSetter("uploadedOn")
-    public void setUploadedOn(LocalDate uploadedOn) {
+    public void setUploadedOn(final LocalDate uploadedOn) {
         this.uploadedOn = uploadedOn;
     }
 
     @JsonSetter("uploadedBy")
-    public void setUploadedBy(Integer uploadedBy) {
+    public void setUploadedBy(final Integer uploadedBy) {
         this.uploadedBy = uploadedBy;
     }
 
     @JsonSetter("size")
-    public void setSize(Integer size) {
+    public void setSize(final Long size) {
         this.size = size;
     }
 
     @JsonSetter("extension")
-    public void setExtension(Integer extension) {
+    public void setExtension(final Integer extension) {
         this.extension = extension;
     }
 }

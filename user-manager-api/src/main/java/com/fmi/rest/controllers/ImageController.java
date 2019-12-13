@@ -2,13 +2,13 @@ package com.fmi.rest.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fmi.rest.model.Image;
-import com.fmi.rest.services.UserService;
 import com.fmi.rest.services.ImageService;
+import com.fmi.rest.util.Constants;
+import com.fmi.rest.util.Util;
 import org.apache.commons.io.IOUtils;
-import org.apache.coyote.Response;
-import org.jvnet.staxex.Base64EncoderStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +33,8 @@ import java.util.Base64;
 @RequestMapping("/images")
 public class ImageController {
 
-    public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
-    public static final String WINDOWS_FILE_SEPARATOR = "\\";
+    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-    // autowired
-    private final UserService userService;
     private final ImageService imageService;
     private final ObjectMapper objectMapper;
     private final String directory;
@@ -45,11 +42,9 @@ public class ImageController {
 
     // TODO why the HTTPONLY SECURE COOKIE IS NOT AVAILABLE IN THIS CLASS (reason why I am using the session)
     @Autowired
-    public ImageController(ImageService imageService,
-                           UserService userService,
-                           ObjectMapper objectMapper,
+    public ImageController(final ImageService imageService,
+                           final ObjectMapper objectMapper,
                            @Value("${upload.files.dir}") final String filesDirectory) {
-        this.userService = userService;
         this.imageService = imageService;
         this.objectMapper = objectMapper;
         this.directory = filesDirectory;
@@ -61,21 +56,18 @@ public class ImageController {
      */
     @ResponseBody
     @PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadingPost(HttpSession session, @RequestParam("filesToUpload[]") MultipartFile[] uploadingFiles) throws IOException {
-        HttpStatus status;
-        Integer id = (Integer) session.getAttribute(UserController.ID);
+    public ResponseEntity<String> uploadingPost(final HttpSession session, @RequestParam("filesToUpload[]") final MultipartFile[] uploadingFiles) {
+        final HttpStatus status;
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         if (id != null) {
-            String path = directory + WINDOWS_FILE_SEPARATOR + id;
+            final String path = directory + FILE_SEPARATOR + id;
             if (handleDirectories(path)) {
-                for (MultipartFile uploadedFile : uploadingFiles) {
-                    // TODO WINDOWS_FILE_SEPARATOR should be set using some variable from the system
+                for (final MultipartFile uploadedFile : uploadingFiles) {
                     final String name = uploadedFile.getOriginalFilename();
-                    final String location = path + WINDOWS_FILE_SEPARATOR + name;
-                    File file = new File(location);
-                    if (!file.exists()) {
-                        uploadedFile.transferTo(file);
-                        // this might be good to be fixed as well i.e. size should be long not int change in the DB and test if works
-                        imageService.saveImage(new Image(name, location, LocalDate.now(), id, (int) uploadedFile.getSize(), getExtension(name)));
+                    final String location = path + FILE_SEPARATOR + name;
+                    final File file = new File(location);
+                    if (!file.exists() && Util.transfer(uploadedFile, file)) {
+                        imageService.saveImage(new Image(name, location, LocalDate.now(), id, uploadedFile.getSize(), getExtension(name)));
                     }
                 }
                 status = HttpStatus.OK;
@@ -91,14 +83,19 @@ public class ImageController {
 
     @ResponseBody
     @GetMapping(value = "/getAll")
-    // gets all images for user TODO put it in annotation description @RestDescription or something
-    public ResponseEntity<String> uploadingPost(HttpSession session) throws IOException {
+    @Description("Returns all images for the logged in user.")
+    public ResponseEntity<String> uploadingPost(final HttpSession session) {
         HttpStatus status = HttpStatus.OK;
         String response = null;
-        Integer id = (Integer) session.getAttribute(UserController.ID);
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         if (id != null) {
-            Iterable<Image> images = imageService.findAllUploadedBy(id);
-            response = objectMapper.writeValueAsString(images);
+            try {
+                final Iterable<Image> images = imageService.findAllUploadedBy(id);
+                response = objectMapper.writeValueAsString(images);
+            } catch (IOException ex) {
+                status = HttpStatus.BAD_REQUEST;
+            }
+
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
@@ -108,16 +105,22 @@ public class ImageController {
 
     @ResponseBody
     @GetMapping(value = "/getImage")
-    public ResponseEntity<String> getImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
-        Integer id = (Integer) session.getAttribute(UserController.ID);
+    public ResponseEntity<String> getImage(@RequestParam("file") final String filename, final HttpSession session) {
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         HttpStatus status = HttpStatus.OK;
         byte[] result = null;
         if (id != null) {
-            String location = imageService.findImageLocation(id, filename);
-            File file = new File(location);
-            InputStream in = new FileInputStream(file);
-            result = IOUtils.toByteArray(in);
-            in.close();
+            final String location = imageService.findImageLocation(id, filename);
+            final File file = new File(location);
+            try {
+                final InputStream in = new FileInputStream(file);
+                result = IOUtils.toByteArray(in);
+                in.close();
+            } catch (IOException ex) {
+                System.out.println("Error while trying to retrieve image");
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
@@ -127,15 +130,19 @@ public class ImageController {
 
     @ResponseBody
     @GetMapping(value = "/download", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public byte[] download(@RequestParam("file") final String filename, HttpSession session) throws IOException {
-        Integer id = (Integer) session.getAttribute(UserController.ID);
+    public byte[] download(@RequestParam("file") final String filename, final HttpSession session) {
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         byte[] result = null;
         if (id != null) {
-            String location = imageService.findImageLocation(id, filename);
-            File file = new File(location);
-            InputStream in = new FileInputStream(file);
-            result = IOUtils.toByteArray(in);
-            in.close();
+            final String location = imageService.findImageLocation(id, filename);
+            final File file = new File(location);
+            try {
+                final InputStream in = new FileInputStream(file);
+                result = IOUtils.toByteArray(in);
+                in.close();
+            } catch (IOException ex) {
+                System.out.println("Error while trying to retrieve image");
+            }
         }
 
         return result;
@@ -143,15 +150,15 @@ public class ImageController {
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
-        Integer id = (Integer) session.getAttribute(UserController.ID);
+    public ResponseEntity<String> deleteImage(@RequestParam("file") final String filename, final HttpSession session) {
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         HttpStatus status = HttpStatus.OK;
         if (id != null) {
-            Integer fileId = imageService.findImageId(id, filename);
-            String location = imageService.findImageLocation(id, filename);
+            final Integer fileId = imageService.findImageId(id, filename);
+            final String location = imageService.findImageLocation(id, filename);
             imageService.deleteById(fileId);
 
-            File file = new File(location);
+            final File file = new File(location);
             if (file.delete()) {
                 System.out.printf("File %s deleted successfully", filename);
             } else {
@@ -162,13 +169,13 @@ public class ImageController {
         return new ResponseEntity<>(status);
     }
 
-    private boolean handleDirectories(String path) {
-        File directory = new File(path);
+    private boolean handleDirectories(final String path) {
+        final File directory = new File(path);
         return directory.exists() || directory.mkdirs();
     }
 
     // TODO this should be retrieved from the database based on the extension of the file, if the extension is wrote return BAD_REQUEST 400 STATUS CODE
-    private Integer getExtension(String name) {
+    private Integer getExtension(final String name) {
         if (name == null) {
             return -1; // boom boom, shouldnt happen
         }

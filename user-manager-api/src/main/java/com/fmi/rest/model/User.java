@@ -23,13 +23,13 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String email) {
+    public User(final String username, final String password, final String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public User(Integer id, String username, String password, String email) {
+    public User(final Integer id, final String username, final String password, final String email) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -57,22 +57,22 @@ public class User {
     }
 
     @JsonSetter("id")
-    public void setId(Integer id) {
+    public void setId(final Integer id) {
         this.id = id;
     }
 
     @JsonSetter("username")
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
     @JsonSetter("password")
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
     @JsonSetter("email")
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 }

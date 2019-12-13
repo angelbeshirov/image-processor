@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class ApplicationInitializer {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
 
         SpringApplication.run(ApplicationInitializer.class, args);
     }
@@ -18,7 +18,7 @@ public class ApplicationInitializer {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(final CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("http://localhost");
             }
         };

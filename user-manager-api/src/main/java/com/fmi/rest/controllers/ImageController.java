@@ -100,7 +100,8 @@ public class ImageController {
                 final Iterable<Image> images = imageService.findAllUploadedBy(id);
                 response = objectMapper.writeValueAsString(images);
             } catch (IOException ex) {
-                System.out.println(ex);
+                // change to log4j in future
+                System.out.printf("Error while serializing image data %s", ex.toString());
                 status = HttpStatus.BAD_REQUEST;
             }
 

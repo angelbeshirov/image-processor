@@ -1,0 +1,62 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+header {
+    height: 50px;
+    width: 100%;
+    padding: 10px 10px;
+}
+
+#title-container {
+    width: 65%;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#title {
+    text-align: center;
+}
+
+#item_previewer {
+    width: auto;
+    height: auto;
+    max-width: 80%;
+    max-height: 80%;
+    display: block;
+    border: 3px solid black;
+    margin: 30px auto 0 auto;
+}
+
+#menu {
+    float: right;
+    /* margin-right: 50px; should not be so close to the end*/
+    display: block;
+    border: 3px solid black;
+    margin: 30px auto 0 auto;
+    border: 2px solid red;
+    width: 20%;
+    height: 60%;
+}
+
+#send {
+    height: 50px;
+    width: 150px;
+    display: block;
+    margin: 0 auto 0 auto;
+}
+
+#gradient {
+    background-image: linear-gradient(#f5f7fa, #c3cfe2);
+}

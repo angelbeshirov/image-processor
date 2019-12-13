@@ -5,6 +5,8 @@ import com.fmi.rest.model.Image;
 import com.fmi.rest.services.UserService;
 import com.fmi.rest.services.ImageService;
 import org.apache.commons.io.IOUtils;
+import org.apache.coyote.Response;
+import org.jvnet.staxex.Base64EncoderStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.util.Base64;
 
 /**
  * @author angel.beshirov
@@ -104,8 +107,27 @@ public class ImageController {
     }
 
     @ResponseBody
+    @GetMapping(value = "/getImage")
+    public ResponseEntity<String> getImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
+        Integer id = (Integer) session.getAttribute(UserController.ID);
+        HttpStatus status = HttpStatus.OK;
+        byte[] result = null;
+        if (id != null) {
+            String location = imageService.findImageLocation(id, filename);
+            File file = new File(location);
+            InputStream in = new FileInputStream(file);
+            result = IOUtils.toByteArray(in);
+            in.close();
+        } else {
+            status = HttpStatus.UNAUTHORIZED;
+        }
+
+        return new ResponseEntity<>(Base64.getEncoder().encodeToString(result), status);
+    }
+
+    @ResponseBody
     @GetMapping(value = "/download", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public byte[] getImage(@RequestParam("file") final String filename, HttpSession session) throws IOException {
+    public byte[] download(@RequestParam("file") final String filename, HttpSession session) throws IOException {
         Integer id = (Integer) session.getAttribute(UserController.ID);
         byte[] result = null;
         if (id != null) {

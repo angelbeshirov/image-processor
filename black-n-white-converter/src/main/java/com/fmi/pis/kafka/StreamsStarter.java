@@ -1,9 +1,10 @@
 package com.fmi.pis.kafka;
 
+import com.fmi.pis.converter.BlackAndWhiteConverter;
+import com.fmi.pis.converter.GrayConverter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
@@ -14,12 +15,16 @@ import java.util.Properties;
 /**
  * @author angel.beshirov
  */
-public class StreamsBuilderTest {
+public class StreamsStarter {
 
-    public void createStream() {
+    public static final String GRAY = "gray";
+    public static final String BLACK_N_WHITE = "black-n-white";
+
+    public void startStreams() {
+        // move to application properties
         final Properties streamsConfiguration = new Properties();
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "sum-lambda-example");
-        streamsConfiguration.put(StreamsConfig.CLIENT_ID_CONFIG, "sum-lambda-example-client");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "black-n-white-converter");
+        streamsConfiguration.put(StreamsConfig.CLIENT_ID_CONFIG, "black-n-white-converter-client");
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.ByteArray().getClass().getName());
@@ -34,12 +39,12 @@ public class StreamsBuilderTest {
         streams.start();
     }
 
-    static Topology getTopology() {
-        final StreamsBuilder builder = new StreamsBuilder();
-        KStream<String, byte[]> views = builder.stream("test");
-
-        views.map(new CustomKeyValueMapper());
-
+    private Topology getTopology() {
+        final org.apache.kafka.streams.StreamsBuilder builder = new org.apache.kafka.streams.StreamsBuilder();
+        KStream<String, byte[]> convertGrayStream = builder.stream("convert-gray-topic");
+        KStream<String, byte[]> convertBlackNWhiteStream = builder.stream("convert-black-n-white-topic");
+        convertGrayStream.foreach(new Action(new GrayConverter(), GRAY));
+        convertBlackNWhiteStream.foreach(new Action(new BlackAndWhiteConverter(), BLACK_N_WHITE));
         return builder.build();
     }
 }

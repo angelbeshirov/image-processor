@@ -105,8 +105,10 @@ public class TaskController {
                 resultTopic = "mirror-topic";
                 break;
             case CONVERT_TO_GRAY:
+                resultTopic = "convert-gray-topic";
+                break;
             case CONVERT_TO_BLACK_AND_WHITE:
-                resultTopic = "convert-topic";
+                resultTopic = "convert-black-n-white-topic";
                 break;
             case EXTRACT_EDGES:
                 resultTopic = "edge-topic";

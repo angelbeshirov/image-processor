@@ -1,10 +1,7 @@
-package com.fmi.pis.kafka.actions;
+package com.fmi.pis.kafka;
 
-import com.fmi.pis.noise.diffusion.filters.Filter;
-import com.fmi.pis.noise.diffusion.filters.MirrorFilter;
+import com.fmi.pis.converter.Converter;
 import org.apache.kafka.streams.kstream.ForeachAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -21,36 +18,32 @@ import java.time.format.DateTimeFormatter;
 public class Action implements ForeachAction<String, byte[]> {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final Logger logger = LoggerFactory.getLogger(Action.class);
     private static final char DOT = '.';
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
     private static final String JPG = ".jpg";
     private static final String JPEG = ".jpeg";
     private static final String PNG = ".png";
 
-    private final Filter filter;
-    private final String actionKeyWord;
+    private final Converter converter;
+    private final String keyWord;
 
-    public Action(final Filter filter, final String actionKeyWord) {
-        super();
-        this.filter = filter;
-        this.actionKeyWord = '_' + actionKeyWord + '_';
+    public Action(final Converter converter, final String keyWord) {
+        this.converter = converter;
+        this.keyWord = '_' + keyWord + '_';
     }
 
     @Override
-    public void apply(final String outputLocation, final byte[] data) {
-
-        logger.info("Received message for " + outputLocation);
+    public void apply(String outputLocation, byte[] data) {
         // this output location will probably be removed and all results will be sent to another kafka topic
         // from which another application will consume and save the result files
         // or it will be passed as key to the next topic
         try (InputStream is = new ByteArrayInputStream(data)) {
             if (handleDirectories(outputLocation.substring(0, outputLocation.lastIndexOf(FILE_SEPARATOR)))) {
                 BufferedImage bufferedImage = ImageIO.read(is);
-                BufferedImage result = filter.filter(bufferedImage);
+                BufferedImage result = converter.convert(bufferedImage);
 
                 String format = outputLocation.substring(outputLocation.indexOf(DOT) + 1);
-                File outputFile = new File(outputLocation.substring(0, toWhere(outputLocation)) + actionKeyWord + formatter.format(LocalDateTime.now()) + DOT + format);
+                File outputFile = new File(outputLocation.substring(0, toWhere(outputLocation)) + keyWord + formatter.format(LocalDateTime.now()) + DOT + format);
                 ImageIO.write(result, format, outputFile);
             }
         } catch (IOException e) {

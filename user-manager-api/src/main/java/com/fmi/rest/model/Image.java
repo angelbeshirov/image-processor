@@ -50,7 +50,6 @@ public class Image {
                  final LocalDate uploadedOn,
                  final Integer uploadedBy,
                  final Long size,
-                 final String email,
                  final Extension extension) {
         this.id = id;
         this.name = name;

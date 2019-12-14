@@ -2,6 +2,7 @@ package com.fmi.rest.services;
 
 import com.fmi.rest.model.Image;
 import com.fmi.rest.repositories.ImageRepository;
+import com.fmi.rest.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,21 @@ public class ImageService {
 
     public Iterable<Image> findAllUploadedBy(final Integer uploadedBy) {
         return imageRepository.findAllByUploadedBy(uploadedBy);
+    }
+
+    public String getBasePath(final Integer uploadedBy) {
+        String basePath = null;
+        Iterable<Image> images = imageRepository.findAllByUploadedBy(uploadedBy);
+        if (images != null && images.iterator().hasNext()) {
+            // this is with the assumption that all images will be stored @ 1 place
+            // and the results are stored @ a child directory of this one, can be changed in future if enough time
+            basePath = images.iterator().next().getLocation();
+            if (basePath != null) {
+                basePath = basePath.substring(0, basePath.lastIndexOf(Constants.FILE_SEPARATOR));
+            }
+        }
+
+        return basePath;
     }
 
     public String findImageLocation(final Integer id, final String filename) {

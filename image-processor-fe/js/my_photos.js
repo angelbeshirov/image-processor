@@ -81,7 +81,7 @@ function addActionsToFile() {
         a.style.display = "none";
         
         a.href = "http://localhost:8081/images/download?file=" + fileName;
-        a.setAttribute('target', '_parent');
+        a.setAttribute('target', '_target');
         a.setAttribute("download", fileName);
         a.click();
         document.body.appendChild(a);

@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -139,7 +140,7 @@ public class ImageController {
 
     @ResponseBody
     @GetMapping(value = "/download", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public byte[] download(@RequestParam("file") final String filename, final HttpSession session) {
+    public ResponseEntity<byte[]> download(@RequestParam("file") final String filename, final HttpSession session) {
         final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         byte[] result = null;
         if (id != null) {
@@ -154,7 +155,12 @@ public class ImageController {
             }
         }
 
-        return result;
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Disposition", "attachment");
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(result);
     }
 
     @ResponseBody

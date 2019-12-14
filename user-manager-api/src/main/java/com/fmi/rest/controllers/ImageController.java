@@ -7,7 +7,6 @@ import com.fmi.rest.services.ExtensionService;
 import com.fmi.rest.services.ImageService;
 import com.fmi.rest.util.Constants;
 import com.fmi.rest.util.Util;
-import com.fmi.rest.util.Validator;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +24,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author angel.beshirov
@@ -114,6 +120,30 @@ public class ImageController {
     }
 
     @ResponseBody
+    @GetMapping(value = "/getAllResults")
+    @Description("Returns all results from processed images by the logged in user.")
+    public ResponseEntity<String> getAllResults(final HttpSession session) {
+        final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
+        String result = null;
+        HttpStatus status = HttpStatus.OK;
+        if (id != null) {
+            final String basePath = imageService.getBasePath(id) + Constants.FILE_SEPARATOR + "results";
+            try {
+                List<String> allData = getAllDataFromImages(basePath);
+                result = objectMapper.writeValueAsString(allData);
+            } catch (IOException ex) {
+                System.out.println("Error while trying to retrieve image");
+                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
+        } else {
+            status = HttpStatus.UNAUTHORIZED;
+        }
+
+        return new ResponseEntity<>(result, status);
+    }
+
+    @ResponseBody
     @GetMapping(value = "/getImage")
     public ResponseEntity<String> getImage(@RequestParam("file") final String filename, final HttpSession session) {
         final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
@@ -146,10 +176,8 @@ public class ImageController {
         if (id != null) {
             final String location = imageService.findImageLocation(id, filename);
             final File file = new File(location);
-            try {
-                final InputStream in = new FileInputStream(file);
+            try (final InputStream in = new FileInputStream(file)) {
                 result = IOUtils.toByteArray(in);
-                in.close();
             } catch (IOException ex) {
                 System.out.println("Error while trying to retrieve image");
             }
@@ -190,11 +218,32 @@ public class ImageController {
     }
 
     private Extension getExtension(final String name) {
-        if(name == null || !name.contains(".")) {
+        if (name == null || !name.contains(Constants.DOT)) {
             return null;
         }
 
-        final String extension = name.substring(name.indexOf('.'));
+        final String extension = name.substring(name.indexOf(Constants.DOT));
         return extensionService.findByValue(extension);
+    }
+
+    // each String is the base64 encoded binary content of an image
+    private List<String> getAllDataFromImages(String path) throws IOException {
+        List<String> result = new ArrayList<>();
+        try (Stream<Path> walk = Files.walk(Paths.get(path))) {
+            result = walk.filter(Files::isRegularFile)
+                    .map(x -> {
+                        byte[] binaryData = null;
+                        final File file = x.toFile();
+                        try (final InputStream in = new FileInputStream(file)) {
+                            binaryData = IOUtils.toByteArray(in);
+                        } catch (IOException ex) {
+                            System.out.println("Error while getting binary data from files.");
+                        }
+
+                        return Base64.getEncoder().encodeToString(binaryData);
+                    }).collect(Collectors.toList());
+        }
+
+        return result;
     }
 }

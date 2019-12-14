@@ -91,7 +91,7 @@ public class TaskController {
         }
     }
 
-    private String determineTopic(Task task) {
+    private String determineTopic(final Task task) {
         String resultTopic = null;
         // all of these should come from application.properties file
         switch (task.getAction()) {

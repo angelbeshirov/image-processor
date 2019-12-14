@@ -2,6 +2,8 @@ package com.fmi.process.kafka;
 
 import com.fmi.process.converter.Converter;
 import org.apache.kafka.streams.kstream.ForeachAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,6 +21,7 @@ public class Action implements ForeachAction<String, byte[]> {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    private static final Logger LOGGER = LoggerFactory.getLogger(Action.class);
     private static final String JPG = ".jpg";
     private static final String JPEG = ".jpeg";
     private static final String PNG = ".png";
@@ -37,6 +40,7 @@ public class Action implements ForeachAction<String, byte[]> {
         // this output location will probably be removed and all results will be sent to another kafka topic
         // from which another application will consume and save the result files
         // or it will be passed as key to the next topic
+        LOGGER.info("Received message for " + outputLocation);
         try (final InputStream is = new ByteArrayInputStream(data)) {
             if (handleDirectories(outputLocation.substring(0, outputLocation.lastIndexOf(FILE_SEPARATOR)))) {
                 final BufferedImage bufferedImage = ImageIO.read(is);

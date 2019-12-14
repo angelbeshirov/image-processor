@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+  
+body {
+    margin: 0;
+    /* font-family: Arial; */
+}
+
+#gradient {
+    background-image: linear-gradient(#f5f7fa, #c3cfe2);
+}
+
+.column {
+    float: left;
+    padding: 10px;
+    width: 25%;
+}
+
+.column img {
+    cursor: pointer;
+    opacity: 0.8; 
+}
+
+.column img:hover {
+    opacity: 1;
+}
+
+.row:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+.container {
+    display: none;
+    position: relative;
+}
+
+.closebtn {
+    color: white;
+    cursor: pointer;
+    font-size: 35px;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+
+#refresh-btn {
+    cursor: pointer;
+    font-size: 28px;
+    margin: 20px 0 0 20px;
+}

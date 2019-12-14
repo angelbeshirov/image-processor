@@ -128,14 +128,15 @@ public class ImageController {
         HttpStatus status = HttpStatus.OK;
         if (id != null) {
             final String basePath = imageService.getBasePath(id) + Constants.FILE_SEPARATOR + "results";
-            try {
-                List<String> allData = getAllDataFromImages(basePath);
-                result = objectMapper.writeValueAsString(allData);
-            } catch (IOException ex) {
-                System.out.println("Error while trying to retrieve image");
-                status = HttpStatus.INTERNAL_SERVER_ERROR;
+            if (Files.exists(Path.of(basePath))) {
+                try {
+                    List<String> allData = getAllDataFromImages(basePath);
+                    result = objectMapper.writeValueAsString(allData);
+                } catch (IOException ex) {
+                    System.out.println("Error while trying to retrieve image");
+                    status = HttpStatus.INTERNAL_SERVER_ERROR;
+                }
             }
-
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }

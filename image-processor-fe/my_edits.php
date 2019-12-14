@@ -19,80 +19,11 @@
 	<nav id="navigation-bar">
 </nav>
 
-<!-- <div style="text-align:center">
-  <h2>Tabbed Image Gallery</h2>
-  <p>Click on the images below:</p>
-</div> -->
-
 <button id="refresh-btn">Обнови <i class="fa fa-refresh"></i></button>
 
-<div class="row">
-	<div class="column">
-		<img src="img/noisy.png" alt="Nature" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/png-4k-background-9.png" alt="Snow" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/switzerland.jpg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-
-	<div class="column">
-		<img src="img/nature.jpeg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-</div>
-
-<div class="row">
-	<div class="column">
-		<img src="img/noisy.png" alt="Nature" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/png-4k-background-9.png" alt="Snow" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/switzerland.jpg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-
-	<div class="column">
-		<img src="img/nature.jpeg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-</div>
-
-<div class="row">
-	<div class="column">
-		<img src="img/noisy.png" alt="Nature" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/png-4k-background-9.png" alt="Snow" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/switzerland.jpg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-
-	<div class="column">
-		<img src="img/nature.jpeg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-</div>
-
-<div class="row">
-	<div class="column">
-		<img src="img/noisy.png" alt="Nature" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/png-4k-background-9.png" alt="Snow" style="width:100%" onclick="myFunction(this);">
-	</div>
-	<div class="column">
-		<img src="img/switzerland.jpg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-
-	<div class="column">
-		<img src="img/nature.jpeg" alt="Mountains" style="width:100%" onclick="myFunction(this);">
-	</div>
-</div>
-
 <div class="container">
-  <span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
-  <img id="expandedImg" style="width:100%">
+	<span onclick="this.parentElement.style.display='none'" class="closebtn">&times;</span>
+	<img id="expandedImg">
 </div>
 
 </body>

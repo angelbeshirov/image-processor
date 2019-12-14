@@ -1,4 +1,4 @@
-package com.fmi.pis.noise.diffusion.filters;
+package com.fmi.process.noise.diffusion.filters;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -44,17 +44,17 @@ public class CannyEdgeFilter implements Filter {
      * {@inheritDoc}
      */
     @Override
-    public BufferedImage filter(BufferedImage img) {
+    public BufferedImage filter(final BufferedImage img) {
         process(img);
-        BufferedImage rgbImage = new BufferedImage(edgesImage.getWidth(), edgesImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final BufferedImage rgbImage = new BufferedImage(edgesImage.getWidth(), edgesImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
-        ColorConvertOp op = new ColorConvertOp(null);
+        final ColorConvertOp op = new ColorConvertOp(null);
         op.filter(edgesImage, rgbImage);
 
         return rgbImage;
     }
 
-    private void process(BufferedImage bufferedImage) {
+    private void process(final BufferedImage bufferedImage) {
         width = bufferedImage.getWidth();
         height = bufferedImage.getHeight();
         size = width * height;
@@ -64,8 +64,8 @@ public class CannyEdgeFilter implements Filter {
             normalizeContrast();
         }
         computeGradients(gaussianKernelRadius, gaussianKernelWidth);
-        int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
-        int high = Math.round(highThreshold * MAGNITUDE_SCALE);
+        final int low = Math.round(lowThreshold * MAGNITUDE_SCALE);
+        final int high = Math.round(highThreshold * MAGNITUDE_SCALE);
         performHysteresis(low, high);
         thresholdEdges();
         writeEdges(data);
@@ -83,15 +83,15 @@ public class CannyEdgeFilter implements Filter {
         }
     }
 
-    private void computeGradients(float kernelRadius, int kernelWidth) {
-        float[] kernel = new float[kernelWidth];
-        float[] diffKernel = new float[kernelWidth];
+    private void computeGradients(final float kernelRadius, final int kernelWidth) {
+        final float[] kernel = new float[kernelWidth];
+        final float[] diffKernel = new float[kernelWidth];
         int kwidth;
         for (kwidth = 0; kwidth < kernelWidth; kwidth++) {
-            float g1 = gaussian(kwidth, kernelRadius);
+            final float g1 = gaussian(kwidth, kernelRadius);
             if (g1 <= GAUSSIAN_CUT_OFF && kwidth >= 2) break;
-            float g2 = gaussian(kwidth - 0.5f, kernelRadius);
-            float g3 = gaussian(kwidth + 0.5f, kernelRadius);
+            final float g2 = gaussian(kwidth - 0.5f, kernelRadius);
+            final float g3 = gaussian(kwidth + 0.5f, kernelRadius);
             kernel[kwidth] = (g1 + g2 + g3) / 3f / (2f * (float) Math.PI * kernelRadius * kernelRadius);
             diffKernel[kwidth] = g3 - g2;
         }
@@ -104,7 +104,7 @@ public class CannyEdgeFilter implements Filter {
         //perform convolution in x and y directions
         for (int x = initX; x < maxX; x++) {
             for (int y = initY; y < maxY; y += width) {
-                int index = x + y;
+                final int index = x + y;
                 float sumX = data[index] * kernel[0];
                 float sumY = sumX;
                 int xOffset = 1;
@@ -124,7 +124,7 @@ public class CannyEdgeFilter implements Filter {
         for (int x = initX; x < maxX; x++) {
             for (int y = initY; y < maxY; y += width) {
                 float sum = 0f;
-                int index = x + y;
+                final int index = x + y;
                 for (int i = 1; i < kwidth; i++)
                     sum += diffKernel[i] * (yCoordinates[index - i] - yCoordinates[index + i]);
 
@@ -135,7 +135,7 @@ public class CannyEdgeFilter implements Filter {
         for (int x = kwidth; x < width - kwidth; x++) {
             for (int y = initY; y < maxY; y += width) {
                 float sum = 0.0f;
-                int index = x + y;
+                final int index = x + y;
                 int yOffset = width;
                 for (int i = 1; i < kwidth; i++) {
                     sum += diffKernel[i] * (xCoordinates[index - yOffset] - xCoordinates[index + yOffset]);
@@ -153,29 +153,29 @@ public class CannyEdgeFilter implements Filter {
         maxY = width * (height - kwidth);
         for (int x = initX; x < maxX; x++) {
             for (int y = initY; y < maxY; y += width) {
-                int index = x + y;
-                int indexN = index - width;
-                int indexS = index + width;
-                int indexW = index - 1;
-                int indexE = index + 1;
-                int indexNW = indexN - 1;
-                int indexNE = indexN + 1;
-                int indexSW = indexS - 1;
-                int indexSE = indexS + 1;
+                final int index = x + y;
+                final int indexN = index - width;
+                final int indexS = index + width;
+                final int indexW = index - 1;
+                final int indexE = index + 1;
+                final int indexNW = indexN - 1;
+                final int indexNE = indexN + 1;
+                final int indexSW = indexS - 1;
+                final int indexSE = indexS + 1;
 
-                float xGrad = xGradient[index];
-                float yGrad = yGradient[index];
-                float gradMag = hypot(xGrad, yGrad);
+                final float xGrad = xGradient[index];
+                final float yGrad = yGradient[index];
+                final float gradMag = hypot(xGrad, yGrad);
 
                 //perform non-maximal suppression
-                float nMag = hypot(xGradient[indexN], yGradient[indexN]);
-                float sMag = hypot(xGradient[indexS], yGradient[indexS]);
-                float wMag = hypot(xGradient[indexW], yGradient[indexW]);
-                float eMag = hypot(xGradient[indexE], yGradient[indexE]);
-                float neMag = hypot(xGradient[indexNE], yGradient[indexNE]);
-                float seMag = hypot(xGradient[indexSE], yGradient[indexSE]);
-                float swMag = hypot(xGradient[indexSW], yGradient[indexSW]);
-                float nwMag = hypot(xGradient[indexNW], yGradient[indexNW]);
+                final float nMag = hypot(xGradient[indexN], yGradient[indexN]);
+                final float sMag = hypot(xGradient[indexS], yGradient[indexS]);
+                final float wMag = hypot(xGradient[indexW], yGradient[indexW]);
+                final float eMag = hypot(xGradient[indexE], yGradient[indexE]);
+                final float neMag = hypot(xGradient[indexNE], yGradient[indexNE]);
+                final float seMag = hypot(xGradient[indexSE], yGradient[indexSE]);
+                final float swMag = hypot(xGradient[indexSW], yGradient[indexSW]);
+                final float nwMag = hypot(xGradient[indexNW], yGradient[indexNW]);
                 float tmp;
 
                 if (xGrad * yGrad <= (float) 0
@@ -198,15 +198,15 @@ public class CannyEdgeFilter implements Filter {
         }
     }
 
-    private float hypot(float x, float y) {
+    private float hypot(final float x, final float y) {
         return (float) Math.hypot(x, y);
     }
 
-    private float gaussian(float x, float sigma) {
+    private float gaussian(final float x, final float sigma) {
         return (float) Math.exp(-(x * x) / (2f * sigma * sigma));
     }
 
-    private void performHysteresis(int low, int high) {
+    private void performHysteresis(final int low, final int high) {
         Arrays.fill(data, 0);
 
         int offset = 0;
@@ -220,16 +220,16 @@ public class CannyEdgeFilter implements Filter {
         }
     }
 
-    private void follow(int x1, int y1, int i1, int threshold) {
-        int x0 = x1 == 0 ? x1 : x1 - 1;
-        int x2 = x1 == width - 1 ? x1 : x1 + 1;
-        int y0 = y1 == 0 ? y1 : y1 - 1;
-        int y2 = y1 == height - 1 ? y1 : y1 + 1;
+    private void follow(final int x1, final int y1, final int i1, final int threshold) {
+        final int x0 = x1 == 0 ? x1 : x1 - 1;
+        final int x2 = x1 == width - 1 ? x1 : x1 + 1;
+        final int y0 = y1 == 0 ? y1 : y1 - 1;
+        final int y2 = y1 == height - 1 ? y1 : y1 + 1;
 
         data[i1] = magnitude[i1];
         for (int x = x0; x <= x2; x++) {
             for (int y = y0; y <= y2; y++) {
-                int i2 = x + y * width;
+                final int i2 = x + y * width;
                 if ((y != y1 || x != x1)
                         && data[i2] == 0
                         && magnitude[i2] >= threshold) {
@@ -246,38 +246,38 @@ public class CannyEdgeFilter implements Filter {
         }
     }
 
-    private int luminance(float r, float g, float b) {
+    private int luminance(final float r, final float g, final float b) {
         return Math.round(0.299f * r + 0.587f * g + 0.114f * b);
     }
 
-    private void readLuminance(BufferedImage bufferedImage) {
-        int type = bufferedImage.getType();
+    private void readLuminance(final BufferedImage bufferedImage) {
+        final int type = bufferedImage.getType();
         if (type == BufferedImage.TYPE_INT_RGB || type == BufferedImage.TYPE_INT_ARGB) {
-            int[] pixels = (int[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
+            final int[] pixels = (int[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
             for (int i = 0; i < size; i++) {
-                int p = pixels[i];
-                int r = (p & 0xff0000) >> 16;
-                int g = (p & 0xff00) >> 8;
-                int b = p & 0xff;
+                final int p = pixels[i];
+                final int r = (p & 0xff0000) >> 16;
+                final int g = (p & 0xff00) >> 8;
+                final int b = p & 0xff;
                 data[i] = luminance(r, g, b);
             }
         } else if (type == BufferedImage.TYPE_BYTE_GRAY) {
-            byte[] pixels = (byte[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
+            final byte[] pixels = (byte[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
             for (int i = 0; i < size; i++) {
                 data[i] = (pixels[i] & 0xff);
             }
         } else if (type == BufferedImage.TYPE_USHORT_GRAY) {
-            short[] pixels = (short[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
+            final short[] pixels = (short[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
             for (int i = 0; i < size; i++) {
                 data[i] = (pixels[i] & 0xffff) / 256;
             }
         } else if (type == BufferedImage.TYPE_3BYTE_BGR) {
-            byte[] pixels = (byte[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
+            final byte[] pixels = (byte[]) bufferedImage.getData().getDataElements(0, 0, width, height, null);
             int offset = 0;
             for (int i = 0; i < size; i++) {
-                int b = pixels[offset++] & 0xff;
-                int g = pixels[offset++] & 0xff;
-                int r = pixels[offset++] & 0xff;
+                final int b = pixels[offset++] & 0xff;
+                final int g = pixels[offset++] & 0xff;
+                final int r = pixels[offset++] & 0xff;
                 data[i] = luminance(r, g, b);
             }
         } else {
@@ -286,16 +286,16 @@ public class CannyEdgeFilter implements Filter {
     }
 
     private void normalizeContrast() {
-        int[] histogram = new int[256];
-        for (int datum : data) {
+        final int[] histogram = new int[256];
+        for (final int datum : data) {
             histogram[datum]++;
         }
-        int[] remap = new int[256];
+        final int[] remap = new int[256];
         int sum = 0;
         int j = 0;
         for (int i = 0; i < histogram.length; i++) {
             sum += histogram[i];
-            int target = sum * 255 / size;
+            final int target = sum * 255 / size;
             for (int k = j + 1; k <= target; k++) {
                 remap[k] = i;
             }
@@ -307,7 +307,7 @@ public class CannyEdgeFilter implements Filter {
         }
     }
 
-    private void writeEdges(int[] pixels) {
+    private void writeEdges(final int[] pixels) {
         if (edgesImage == null) {
             edgesImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         }

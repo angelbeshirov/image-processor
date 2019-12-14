@@ -1,7 +1,6 @@
-package com.fmi.pis.kafka.actions;
+package com.fmi.process.kafka.actions;
 
-import com.fmi.pis.noise.diffusion.filters.Filter;
-import com.fmi.pis.noise.diffusion.filters.MirrorFilter;
+import com.fmi.process.noise.diffusion.filters.Filter;
 import org.apache.kafka.streams.kstream.ForeachAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 public class Action implements ForeachAction<String, byte[]> {
 
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final Logger logger = LoggerFactory.getLogger(Action.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Action.class);
     private static final char DOT = '.';
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
     private static final String JPG = ".jpg";
@@ -39,22 +38,22 @@ public class Action implements ForeachAction<String, byte[]> {
 
     @Override
     public void apply(final String outputLocation, final byte[] data) {
-
-        logger.info("Received message for " + outputLocation);
+        LOGGER.info("Received message for " + outputLocation);
         // this output location will probably be removed and all results will be sent to another kafka topic
         // from which another application will consume and save the result files
         // or it will be passed as key to the next topic
-        try (InputStream is = new ByteArrayInputStream(data)) {
+        try (final InputStream is = new ByteArrayInputStream(data)) {
             if (handleDirectories(outputLocation.substring(0, outputLocation.lastIndexOf(FILE_SEPARATOR)))) {
-                BufferedImage bufferedImage = ImageIO.read(is);
-                BufferedImage result = filter.filter(bufferedImage);
+                final BufferedImage bufferedImage = ImageIO.read(is);
+                final BufferedImage result = filter.filter(bufferedImage);
 
-                String format = outputLocation.substring(outputLocation.indexOf(DOT) + 1);
-                File outputFile = new File(outputLocation.substring(0, toWhere(outputLocation)) + actionKeyWord + formatter.format(LocalDateTime.now()) + DOT + format);
+                final String format = outputLocation.substring(outputLocation.indexOf(DOT) + 1);
+                final File outputFile = new File(outputLocation.substring(0, getExtensionIndex(outputLocation)) +
+                        actionKeyWord + formatter.format(LocalDateTime.now()) + DOT + format);
                 ImageIO.write(result, format, outputFile);
             }
-        } catch (IOException e) {
-            System.out.printf("Error while writing the result from the operation! %s", e.toString());
+        } catch (final IOException e) {
+            LOGGER.error("Error while writing the result from the operation", e);
         }
     }
 
@@ -63,12 +62,10 @@ public class Action implements ForeachAction<String, byte[]> {
         return directory.exists() || directory.mkdirs();
     }
 
-
-    // TODO extension has to be deserialized from the key or think of better way
-    private int toWhere(String directory) {
-        int res1 = directory.indexOf(JPG);
-        int res2 = directory.indexOf(JPEG);
-        int res3 = directory.indexOf(PNG);
+    private int getExtensionIndex(final String directory) {
+        final int res1 = directory.indexOf(JPG);
+        final int res2 = directory.indexOf(JPEG);
+        final int res3 = directory.indexOf(PNG);
 
         if (res1 != -1) {
             return res1;

@@ -1,6 +1,6 @@
-package com.fmi.pis.noise.diffusion.filters;
+package com.fmi.process.noise.diffusion.filters;
 
-import com.fmi.pis.noise.util.Util;
+import com.fmi.process.noise.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,7 +26,7 @@ public class IsotropicDiffusionFilter implements Filter {
      * @param iterations number of iterations
      * @param lambda     width of one time step
      */
-    public IsotropicDiffusionFilter(int iterations, double lambda) {
+    public IsotropicDiffusionFilter(final int iterations, final double lambda) {
         this.iterations = iterations;
         this.lambda = lambda;
     }
@@ -38,39 +38,39 @@ public class IsotropicDiffusionFilter implements Filter {
      * @return the processed image
      */
     @Override
-    public BufferedImage filter(BufferedImage image) {
-        BufferedImage buff = Util.deepCopy(image);
+    public BufferedImage filter(final BufferedImage image) {
+        final BufferedImage buff = Util.deepCopy(image);
         for (int k = 0; k < this.iterations; k++) {
             for (int i = 1; i < buff.getWidth() - 1; i++) {
                 for (int j = 1; j < buff.getHeight() - 1; j++) {
-                    int rgbNorth = buff.getRGB(i, j - 1);
-                    int rgbSouth = buff.getRGB(i, j + 1);
-                    int rgbWest = buff.getRGB(i - 1, j);
-                    int rgbEast = buff.getRGB(i + 1, j);
-                    int rgbCenter = buff.getRGB(i, j);
+                    final int rgbNorth = buff.getRGB(i, j - 1);
+                    final int rgbSouth = buff.getRGB(i, j + 1);
+                    final int rgbWest = buff.getRGB(i - 1, j);
+                    final int rgbEast = buff.getRGB(i + 1, j);
+                    final int rgbCenter = buff.getRGB(i, j);
 
-                    int red = (int) (((rgbCenter >> 16) & 0xFF) +
+                    final int red = (int) (((rgbCenter >> 16) & 0xFF) +
                             this.lambda * (-4 * ((rgbCenter >> 16) & 0xFF) +
                                     ((rgbWest >> 16) & 0xFF) +
                                     ((rgbEast >> 16) & 0xFF) +
                                     ((rgbSouth >> 16) & 0xFF) +
                                     ((rgbNorth >> 16) & 0xFF)));
 
-                    int green = (int) (((rgbCenter >> 8) & 0xFF) +
+                    final int green = (int) (((rgbCenter >> 8) & 0xFF) +
                             this.lambda * (-4 * ((rgbCenter >> 8) & 0xFF) +
                                     ((rgbWest >> 8) & 0xFF) +
                                     ((rgbEast >> 8) & 0xFF) +
                                     ((rgbSouth >> 8) & 0xFF) +
                                     ((rgbNorth >> 8) & 0xFF)));
 
-                    int blue = (int) (((rgbCenter & 0xFF) +
+                    final int blue = (int) (((rgbCenter & 0xFF) +
                             this.lambda * (-4 * (rgbCenter & 0xFF) +
                                     (rgbWest & 0xFF) +
                                     (rgbEast & 0xFF) +
                                     (rgbSouth & 0xFF) +
                                     (rgbNorth & 0xFF))));
 
-                    Color color = new Color(red, green, blue);
+                    final Color color = new Color(red, green, blue);
                     buff.setRGB(i, j, color.getRGB());
                 }
             }

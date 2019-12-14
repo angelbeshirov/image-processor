@@ -1,17 +1,21 @@
-package com.fmi.pis.noise.diffusion;
+package com.fmi.process.noise.diffusion;
 
-import com.fmi.pis.noise.diffusion.filters.Filter;
+import com.fmi.process.noise.diffusion.filters.Filter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+
+/**
+ * not used at the moment
+ */
 public class ImageProcessor {
     private Filter filter;
     private BufferedImage image;
 
-    public void setFilter(Filter filter) {
+    public void setFilter(final Filter filter) {
         this.filter = filter;
     }
 
@@ -23,7 +27,7 @@ public class ImageProcessor {
      */
     public void process(final File source, final File output) {
         loadImage(source);
-        BufferedImage res = filter.filter(image);
+        final BufferedImage res = filter.filter(image);
         if (!saveImage(res, output)) {
             System.out.println("Error while processing the image!");
         }
@@ -37,7 +41,7 @@ public class ImageProcessor {
     private void loadImage(final File file) {
         try {
             this.image = ImageIO.read(file);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             System.out.println("Error while loading the image into memory.");
         }
     }
@@ -53,7 +57,7 @@ public class ImageProcessor {
         boolean result = true;
         try {
             ImageIO.write(bufferedImage, "png", file);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             System.out.println("Error while saving the filtered image.");
             result = false;
         }

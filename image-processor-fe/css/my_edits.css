@@ -62,3 +62,7 @@ body {
 #refresh-btn:active {
     transform: translateY(2px);
 }
+
+#expandedImg {
+    width: 100%;
+}

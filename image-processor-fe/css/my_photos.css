@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -85,7 +86,6 @@ table th.r {
 }
 
 .table-head th {
-    font-family: OpenSans-Regular;
     font-size: 18px;
     color: #fff;
     line-height: 1.2;
@@ -93,7 +93,6 @@ table th.r {
 }
 
 tbody tr {
-    font-family: OpenSans-Regular;
     font-size: 15px;
     color: #808080;
     line-height: 1.2;
@@ -142,7 +141,7 @@ tbody tr:hover {
     text-overflow: ellipsis;
     transition: all 200ms ease-in-out 0s;
     white-space: nowrap;
-    font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial, sans-serif;
+    /* font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial, sans-serif; */
     font-weight: 700;
     padding: 19px 39px 18px;
     font-size: 18px;
@@ -197,9 +196,13 @@ tbody tr:hover {
 
 .dropdown-menu a {
     color: black;
-    padding: 6px 6px;
+    padding: 6px 0;
     text-decoration: none;
     display: block;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    border-bottom: 1px solid black;
 }
 
 .dropdown-menu a:hover {
@@ -207,13 +210,31 @@ tbody tr:hover {
 }
 
 #drop_file_zone {
-    background-color: #EEE;
-    border: #999 5px dashed;
+    background-color: rgba(173, 216, 230, 0.2);
+    border: rgb(0, 0, 0) 4px dashed;
     width: 500px;
     height: 200px;
     padding: 8px;
     font-size: 18px;
     margin: auto;
+    border-radius: 5px;
+}
+
+#choose_file_btn {
+    cursor: pointer;
+    background: none;
+    background-color: white;
+    border: 1px solid #36304a;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+#choose_file_btn:hover {
+    text-decoration: underline;
+}
+
+#choose_file_btn:active {
+    transform: translateY(2px);
 }
 
 #drag_upload_file {
@@ -223,8 +244,14 @@ tbody tr:hover {
 
 #drag_upload_file p {
     text-align: center;
+    font-size: 20px;
 }
 
 #drag_upload_file #selectfile {
     display: none;
+}
+
+td.column5 {
+    padding: 0;
+    text-align: center;
 }

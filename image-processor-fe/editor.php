@@ -22,15 +22,18 @@
 		</div>
 	</header>
 	<div id="menu">
-		<select id="select_action">
-			<option value="0">Компресиране</option>
-			<option value="1">Премахване на шум</option>
-			<option value="2">Отрази спрямо централен вертикал</option> <!-- ПО ДОБРО ИМЕ??? -->
-			<option value="3">Преобразуване в сива снимка</option>
-			<option value="4">Преобразуване в черно-бяла снимка</option>
-			<option value="5">Извличане на контур</option>
-		</select>
-		<button id="send">Изпрати</button>
+		<div id="select-send-container">
+			<label id="select_action_label" for="select_action">Избор на обработка</label>
+			<select id="select_action">
+				<option value="0">Компресиране</option>
+				<option value="1">Премахване на шум</option>
+				<option value="2">Отрази спрямо централен вертикал</option> <!-- ПО ДОБРО ИМЕ??? -->
+				<option value="3">Преобразуване в сива снимка</option>
+				<option value="4">Преобразуване в черно-бяла снимка</option>
+				<option value="5">Извличане на контур</option>
+			</select>
+			<button id="send">Изпрати</button>
+		</div>
 	</div>
 	<div id="item_container">
 		<img id="item_previewer" src="" />

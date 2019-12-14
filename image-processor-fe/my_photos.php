@@ -24,7 +24,7 @@
 			<div id="drag_upload_file">
 				<p>Дръпни и пусни файл</p>
 				<p>или</p>
-				<p><input type="button" value="Избери файл" onclick="file_explorer();"></p>
+				<p><input id="choose_file_btn" type="button" value="Избери файл" onclick="file_explorer();"></p>
 				<input type="file" name="filesToUpload[]" id="selectfile" multiple />
 			</div>
 		</div>

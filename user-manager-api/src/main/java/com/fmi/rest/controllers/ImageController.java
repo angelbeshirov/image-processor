@@ -156,7 +156,7 @@ public class ImageController {
         }
 
         final HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Disposition", "attachment");
+        responseHeaders.set("Content-Disposition", "attachment; filename=" + filename);
 
         return ResponseEntity.ok()
                 .headers(responseHeaders)

@@ -22,24 +22,12 @@ public class ImageService {
         this.imageRepository = imageRepository;
     }
 
-    public Optional<Image> findById(final Integer id) {
-        return imageRepository.findById(id);
-    }
-
     public void deleteById(final Integer id) {
         imageRepository.deleteById(id);
     }
 
     public Image saveImage(final Image image) {
         return imageRepository.save(image);
-    }
-
-    public Iterable<Image> findAllImages() {
-        return imageRepository.findAll();
-    }
-
-    public Image findUploadedBy(final Integer uploadedBy) {
-        return imageRepository.findByUploadedBy(uploadedBy);
     }
 
     public Iterable<Image> findAllUploadedBy(final Integer uploadedBy) {

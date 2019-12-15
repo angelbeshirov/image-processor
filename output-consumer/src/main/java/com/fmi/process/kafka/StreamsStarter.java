@@ -1,9 +1,6 @@
 package com.fmi.process.kafka;
 
-import com.fmi.process.kafka.actions.ActionKeyValueMapper;
-import com.fmi.process.noise.diffusion.filters.CannyEdgeFilter;
-import com.fmi.process.noise.diffusion.filters.IsotropicDiffusionFilter;
-import com.fmi.process.noise.diffusion.filters.MirrorFilter;
+import com.fmi.process.kafka.actions.Action;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -19,12 +16,6 @@ import java.util.Properties;
  */
 public class StreamsStarter {
 
-    public static final String MIRRORED = "mirrored";
-    public static final String NOISE_REDUCTION = "noise_reduction";
-    public static final String EDGE = "edge";
-    public static final String MIRROR_TOPIC = "mirror.topic";
-    public static final String NOISE_REDUCTION_TOPIC = "noise.reduction.topic";
-    public static final String EDGE_TOPIC = "edge.topic";
     public static final String OUTPUT_TOPIC = "output.topic";
     private final Properties properties;
 
@@ -47,19 +38,8 @@ public class StreamsStarter {
 
     private Topology getTopology() {
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, byte[]> mirrorStream = builder.stream(properties.getProperty(MIRROR_TOPIC));
-        final KStream<String, byte[]> noiseReductionStream = builder.stream(properties.getProperty(NOISE_REDUCTION_TOPIC));
-        final KStream<String, byte[]> edgeStream = builder.stream(properties.getProperty(EDGE_TOPIC));
-        mirrorStream
-                .map(new ActionKeyValueMapper(new MirrorFilter(), MIRRORED))
-                .to(properties.getProperty(OUTPUT_TOPIC));
-        noiseReductionStream
-                .map(new ActionKeyValueMapper(new IsotropicDiffusionFilter(), NOISE_REDUCTION))
-                .to(properties.getProperty(OUTPUT_TOPIC));
-        edgeStream
-                .map(new ActionKeyValueMapper(new CannyEdgeFilter(), EDGE))
-                .to(properties.getProperty(OUTPUT_TOPIC));
-
+        final KStream<String, byte[]> outputStream = builder.stream(properties.getProperty(OUTPUT_TOPIC));
+        outputStream.foreach(new Action());
         return builder.build();
     }
 }

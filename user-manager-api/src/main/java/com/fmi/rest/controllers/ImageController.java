@@ -8,6 +8,8 @@ import com.fmi.rest.services.ImageService;
 import com.fmi.rest.util.Constants;
 import com.fmi.rest.util.Util;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
@@ -43,7 +45,7 @@ import java.util.stream.Stream;
 @RequestMapping("/images")
 public class ImageController {
 
-    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+    private final static Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
     private final ImageService imageService;
     private final ExtensionService extensionService;
@@ -64,34 +66,33 @@ public class ImageController {
     }
 
     /**
-     * TODO THINK HOW TO FIX
+     * TODO THINK HOW TO FIX (Store cookies and session in db?/ or make rest call when logged in to another end point)
      * Bug: When stopped the session is destroyed, but the cookies remain, so the user is logged in but can not upload files
      */
     @ResponseBody
     @PostMapping(value = "/upload")
-    public ResponseEntity<String> uploadingPost(final HttpSession session, @RequestParam("filesToUpload[]") final MultipartFile[] uploadingFiles) {
-        final HttpStatus status;
+    public ResponseEntity<String> uploadingPost(final HttpSession session,
+                                                @RequestParam("filesToUpload[]") final MultipartFile[] uploadingFiles) {
+        HttpStatus status = HttpStatus.OK;
         final Integer id = (Integer) session.getAttribute(Constants.COOKIE_ID_NAME);
         if (id != null) {
-            final String path = directory + FILE_SEPARATOR + id;
+            final String path = directory + Constants.FILE_SEPARATOR + id;
             if (handleDirectories(path)) {
                 for (final MultipartFile uploadedFile : uploadingFiles) {
                     final String name = uploadedFile.getOriginalFilename();
-                    final String location = path + FILE_SEPARATOR + name;
+                    final String location = path + Constants.FILE_SEPARATOR + name;
                     final File file = new File(location);
                     if (!file.exists() && Util.transfer(uploadedFile, file)) {
                         final Extension extension = getExtension(name);
                         imageService.saveImage(new Image(name, location, LocalDate.now(), id, uploadedFile.getSize(), extension));
                     }
                 }
-                status = HttpStatus.OK;
             } else {
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
-
         return new ResponseEntity<>(status);
     }
 
@@ -106,12 +107,10 @@ public class ImageController {
             try {
                 final Iterable<Image> images = imageService.findAllUploadedBy(id);
                 response = objectMapper.writeValueAsString(images);
-            } catch (IOException ex) {
-                // change to log4j in future
-                System.out.printf("Error while serializing image data %s", ex.toString());
+            } catch (IOException e) {
+                LOGGER.error("Error while serializing image data", e);
                 status = HttpStatus.BAD_REQUEST;
             }
-
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
@@ -132,15 +131,14 @@ public class ImageController {
                 try {
                     List<String> allData = getAllDataFromImages(basePath);
                     result = objectMapper.writeValueAsString(allData);
-                } catch (IOException ex) {
-                    System.out.println("Error while trying to retrieve image");
+                } catch (IOException e) {
+                    LOGGER.error("Error while trying to retrieve image", e);
                     status = HttpStatus.INTERNAL_SERVER_ERROR;
                 }
             }
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
-
         return new ResponseEntity<>(result, status);
     }
 
@@ -153,15 +151,12 @@ public class ImageController {
         if (id != null) {
             final String location = imageService.findImageLocation(id, filename);
             final File file = new File(location);
-            try {
-                final InputStream in = new FileInputStream(file);
+            try (final InputStream in = new FileInputStream(file)) {
                 result = IOUtils.toByteArray(in);
-                in.close();
-            } catch (IOException ex) {
-                System.out.println("Error while trying to retrieve image");
+            } catch (IOException e) {
+                LOGGER.error("Error while trying to retrieve image.", e);
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
-
         } else {
             status = HttpStatus.UNAUTHORIZED;
         }
@@ -179,8 +174,8 @@ public class ImageController {
             final File file = new File(location);
             try (final InputStream in = new FileInputStream(file)) {
                 result = IOUtils.toByteArray(in);
-            } catch (IOException ex) {
-                System.out.println("Error while trying to retrieve image");
+            } catch (IOException e) {
+                LOGGER.error("Error while trying to retrieve image.", e);
             }
         }
 
@@ -201,11 +196,11 @@ public class ImageController {
             final Integer fileId = imageService.findImageId(id, filename);
             final String location = imageService.findImageLocation(id, filename);
             imageService.deleteById(fileId);
-
             final File file = new File(location);
             if (file.delete()) {
                 System.out.printf("File %s deleted successfully", filename);
             } else {
+                LOGGER.error("Error while trying to delete file {}.", file.getAbsolutePath());
                 status = HttpStatus.INTERNAL_SERVER_ERROR;
             }
         }
@@ -229,20 +224,22 @@ public class ImageController {
 
     // each String is the base64 encoded binary content of an image
     private List<String> getAllDataFromImages(String path) throws IOException {
-        List<String> result = new ArrayList<>();
+        List<String> result;
         try (Stream<Path> walk = Files.walk(Paths.get(path))) {
-            result = walk.filter(Files::isRegularFile)
+            result = walk
+                    .filter(Files::isRegularFile)
                     .map(x -> {
                         byte[] binaryData = null;
                         final File file = x.toFile();
                         try (final InputStream in = new FileInputStream(file)) {
                             binaryData = IOUtils.toByteArray(in);
-                        } catch (IOException ex) {
-                            System.out.println("Error while getting binary data from files.");
+                        } catch (IOException e) {
+                            LOGGER.error("Error while getting binary data from files.", e);
                         }
 
                         return Base64.getEncoder().encodeToString(binaryData);
-                    }).collect(Collectors.toList());
+                    })
+                    .collect(Collectors.toList());
         }
 
         return result;

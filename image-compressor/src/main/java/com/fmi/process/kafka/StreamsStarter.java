@@ -16,6 +16,8 @@ import java.util.Properties;
  */
 public class StreamsStarter {
     public static final String MIRROR_TOPIC = "compress.topic";
+    public static final String OUTPUT_TOPIC = "output.topic";
+
     public static final String COMPRESSED = "compressed";
     private final Properties properties;
 
@@ -39,7 +41,9 @@ public class StreamsStarter {
     private Topology getTopology() {
         final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, byte[]> compressionStream = builder.stream(properties.getProperty(MIRROR_TOPIC));
-        compressionStream.foreach(new Action(new SingularValueDecomposition(), COMPRESSED));
+        compressionStream
+                .map(new CompressionKeyValueMapper(new SingularValueDecomposition(), COMPRESSED))
+                .to(properties.getProperty(OUTPUT_TOPIC));
         return builder.build();
     }
 }

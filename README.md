@@ -13,16 +13,18 @@
 * Copy the content of image-processor-fe and paste it into the htdocs directory located in the XAMPP installation directory
 * Download kafka 2.11-1.0.0
 * Go to <kafka_directory>/bin/windows for windows users (for UNIX users it is similar just the scripts are located 1 directory up in the tree) and execute the following commands:
-    * zookeeper-server-start.bat ..\..\config\zookeeper.properties
-    * kafka-server-start.bat ..\..\config\server.properties
+    * zookeeper-server-start.bat ..\\..\\config\zookeeper.properties
+    * kafka-server-start.bat ..\\..\\config\server.properties
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic compression-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic noise-reduction-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic mirror-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic convert-gray-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic convert-black-n-white-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic edge-topic
+    * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic output-topic
 * Start the user-manager-api application by running the main method in the ApplicationInitializer class
 * Start the black-n-white converter application by running the main method in the Runner class
 * Start the noise-reducer application by running the main method in the Runner class
 * Start the image-compressor application by running the main method in the Runner class
+* Start the output-consumer application by running the main method in the Runner class
 * Go to localhost and start using the system

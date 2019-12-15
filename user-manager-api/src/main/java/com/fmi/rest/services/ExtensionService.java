@@ -21,8 +21,4 @@ public class ExtensionService {
     public Extension findByValue(String value) {
         return extensionRepository.findByValue(value);
     }
-
-    public Extension findById(Integer id) {
-        return extensionRepository.findById(id).orElse(null);
-    }
 }

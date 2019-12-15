@@ -8,6 +8,8 @@ import com.fmi.rest.util.Validator;
 import com.fmi.rest.model.User;
 import com.fmi.rest.services.UserService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,7 @@ import java.io.InputStream;
 @RequestMapping("/users")
 public class UserController {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
     private final UserService userService;
     private final ObjectMapper objectMapper;
 
@@ -63,10 +66,10 @@ public class UserController {
                 error = Constants.EMAIL_ALREADY_EXISTS;
             }
         } catch (final IOException e) {
-            System.out.println("Error while parsing JSON for registration");
+            LOGGER.error("Error while parsing JSON for registration", e);
             status = HttpStatus.BAD_REQUEST;
         } catch (final Exception e) {
-            System.out.println("Error while storing user into the database");
+            LOGGER.error("Error while storing user into the database", e);
             status = HttpStatus.BAD_REQUEST;
         }
         return new ResponseEntity<>(error, status);
@@ -76,7 +79,6 @@ public class UserController {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@RequestBody final String payload, final HttpServletResponse response, final HttpSession session) {
         String error = null;
-        System.out.println(payload);
         HttpStatus status = HttpStatus.OK;
         try {
             final User user = objectMapper.readValue(payload, User.class);
@@ -85,17 +87,17 @@ public class UserController {
                 status = HttpStatus.BAD_REQUEST;
                 error = "Wrong email or password";
             } else {
-                System.out.println("Successfully logged in");
+                LOGGER.info("Successfully logged in");
                 session.setAttribute(Constants.COOKIE_ID_NAME, databaseUser.getId());
                 Util.addInsecureCookie(Constants.COOKIE_USERNAME_NAME, databaseUser.getUsername(), response);
                 Util.addSecureCookie(Constants.COOKIE_EMAIL_NAME, databaseUser.getEmail(), response);
                 Util.addSecureCookie(Constants.COOKIE_ID_NAME, databaseUser.getId().toString(), response);
             }
         } catch (final IOException e) {
-            System.out.println("Error while parsing JSON for login");
+            LOGGER.error("Error while parsing JSON for login", e);
             status = HttpStatus.BAD_REQUEST;
         } catch (final Exception e) {
-            System.out.println("Error while storing user into the database");
+            LOGGER.error("Error while storing user into the database", e);
             status = HttpStatus.BAD_REQUEST;
         }
 

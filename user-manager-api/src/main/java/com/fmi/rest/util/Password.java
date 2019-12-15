@@ -1,9 +1,5 @@
 package com.fmi.rest.util;
 
-/**
- * @author angel.beshirov
- */
-
 import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.SecretKey;

@@ -2,10 +2,9 @@
 * Cookies and session are not properly handled
 * The button which sends requests for image processing can be abused and fill up and crash the server a timeout should be added for ~1 second
 * The compression does not work properly with .png
-* The output directory is not easily changeable (should be configurable and another consumer application should be added)
-* The user-manager-api contains functionality different from the user management, so it should be separated into 2 or more APIs
 * Shell and batch script can be written to automate the starting of the project in future
 * Improve error handling for both front-end and back-end
+* Add support for more extensions, currently the system supports .jpg, .jpeg and .png
 ## Run the project
 * Clone the repository somewhere
 * Download and start XAMPP

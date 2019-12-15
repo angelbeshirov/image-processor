@@ -1,4 +1,4 @@
-package com.fmi.process.noise.diffusion;
+package com.fmi.process;
 
 import com.fmi.process.kafka.StreamsStarter;
 import org.slf4j.Logger;

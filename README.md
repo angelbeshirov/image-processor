@@ -22,7 +22,7 @@
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic convert-black-n-white-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic edge-topic
     * kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic output-topic
-* Start the user-manager-api application by running the main method in the ApplicationInitializer class
+* Start the image-processor-api application by running the main method in the ApplicationInitializer class
 * Start the black-n-white converter application by running the main method in the Runner class
 * Start the noise-reducer application by running the main method in the Runner class
 * Start the image-compressor application by running the main method in the Runner class

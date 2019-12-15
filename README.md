@@ -5,6 +5,7 @@
 * The output directory is not easily changeable (should be configurable and another consumer application should be added)
 * The user-manager-api contains functionality different from the user management, so it should be separated into 2 or more APIs
 * Shell and batch script can be written to automate the starting of the project in future
+* Improve error handling for both front-end and back-end
 ## Run the project
 * Clone the repository somewhere
 * Download and start XAMPP

@@ -2,6 +2,9 @@ window.onload = function() {
   clearAndPopulate();
 
   document.getElementById("refresh-btn").addEventListener("click", function() {
+    var expanded = document.getElementsByClassName("container")[0];
+    expanded.style.display = "none";
+
     clearAndPopulate();
   });
 };

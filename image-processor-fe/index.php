@@ -22,9 +22,35 @@
 	</nav>
 	<div id="login-info"></div>
 	<section>
-		<div id="main-logo-container ">
-			<img id="main-logo" src="img/main_logo.jpg" alt="main logo">
-		</div>
+		<div class="slideshow-container">
+        <div class="mySlides fade">
+        <div class="numbertext">1 / 3</div>
+        <img src="img/black_and_white.jpg" class="slideshow-image">
+        <div class="image-caption">Преобразуване в черно-бяла снимка</div>
+        </div>
+
+        <div class="mySlides fade">
+        <div class="numbertext">2 / 3</div>
+        <img src="img/noise.jpg" class="slideshow-image">
+        <div class="image-caption">Премахване на шум</div>
+        </div>
+
+        <div class="mySlides fade">
+        <div class="numbertext">3 / 3</div>
+        <img src="img/gray.jpg" class="slideshow-image">
+        <div class="image-caption">Преобразуване в сива снимка</div>
+        </div>
+
+        <a class="prev">&#10094;</a>
+        <a class="next">&#10095;</a>
+        </div>
+        <br>
+
+        <div style="text-align:center">
+        <span class="dot" id="dot1"></span>
+        <span class="dot" id="dot2"></span>
+        <span class="dot" id="dot3"></span>
+        </div>
 	</section>
 </body>
 </html>

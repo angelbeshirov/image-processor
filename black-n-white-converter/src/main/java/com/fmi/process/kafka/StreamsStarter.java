@@ -20,6 +20,7 @@ public class StreamsStarter {
     public static final String BLACK_N_WHITE = "black-n-white";
     public static final String CONVERT_GRAY_TOPIC = "convert.gray.topic";
     public static final String CONVERT_BLACK_AND_WHITE_TOPIC = "convert.black.and.white.topic";
+    public static final String OUTPUT_TOPIC = "output.topic";
     private final Properties properties;
 
     public StreamsStarter(final Properties properties) {
@@ -44,8 +45,14 @@ public class StreamsStarter {
         final org.apache.kafka.streams.StreamsBuilder builder = new org.apache.kafka.streams.StreamsBuilder();
         final KStream<String, byte[]> convertGrayStream = builder.stream(properties.getProperty(CONVERT_GRAY_TOPIC));
         final KStream<String, byte[]> convertBlackNWhiteStream = builder.stream(properties.getProperty(CONVERT_BLACK_AND_WHITE_TOPIC));
-        convertGrayStream.foreach(new Action(new GrayConverter(), GRAY));
-        convertBlackNWhiteStream.foreach(new Action(new BlackAndWhiteConverter(), BLACK_N_WHITE));
+        convertGrayStream
+                .map(new ConverterKeyValueMapper(new GrayConverter(), GRAY))
+                .to(properties.getProperty(OUTPUT_TOPIC));
+
+        convertBlackNWhiteStream
+                .map(new ConverterKeyValueMapper(new BlackAndWhiteConverter(), BLACK_N_WHITE))
+                .to(properties.getProperty(OUTPUT_TOPIC));
+
         return builder.build();
     }
 }

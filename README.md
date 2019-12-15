@@ -5,6 +5,10 @@
 * Shell and batch script can be written to automate the starting of the project in future
 * Improve error handling for both front-end and back-end
 * Add support for more extensions, currently the system supports .jpg, .jpeg and .png
+* Add retention policy for the result images
+* Improve the result retrieval (currently all result images are served as 1 big response to a GET request)
+## Architecture
+![Architecture](/Architecture.png)
 ## Run the project
 * Clone the repository somewhere
 * Download and start XAMPP

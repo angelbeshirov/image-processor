@@ -7,7 +7,9 @@ window.onload = function() {
     }
     ajax("http://localhost:8081/images/getImage?file=" + file, {}, setUp);
 
-    document.getElementById("send").addEventListener("click", function() {
+    var sendButton = document.getElementById("send");
+    sendButton.addEventListener("click", function() {
+        sendButton.disabled = true;
         var jsonObject = {};
         jsonObject["action"] = parseInt(getAction());
         jsonObject["file"] = file;
@@ -16,13 +18,22 @@ window.onload = function() {
         settings["data"] = JSON.stringify(jsonObject);
         console.log(JSON.stringify(jsonObject));
         ajax("http://localhost:8081/tasks/perform",  settings, handleResponse);
+        sendButton.disabled = false;
     });
 };
 
 function handleResponse(xhr) {
+    var responseText = document.getElementById("response-message");
     if(xhr.status != 200) {
-        console.log("There was an error"); // not good error handling;
+        responseText.innerHTML = "Възникна грешка";
+        responseText.className = "error-response-message";
+    } else {
+        responseText.innerHTML = "Снимката е изпратена успешно за обработка";
+        responseText.className = "successful-response-message";
     }
+    setTimeout(function() {
+        responseText.innerHTML = "";
+    }, 3500);
 }
 
 function setUp(xhr) {

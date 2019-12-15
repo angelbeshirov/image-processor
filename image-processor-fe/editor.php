@@ -33,6 +33,7 @@
 				<option value="5">Извличане на контур</option>
 			</select>
 			<button id="send">Изпрати</button>
+			<p id="response-message"></p>
 		</div>
 	</div>
 	<div id="item_container">

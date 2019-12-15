@@ -50,7 +50,8 @@ public class CannyEdgeFilter implements Filter {
 
         final ColorConvertOp op = new ColorConvertOp(null);
         op.filter(edgesImage, rgbImage);
-
+        data = null;
+        edgesImage = null;
         return rgbImage;
     }
 
@@ -69,6 +70,7 @@ public class CannyEdgeFilter implements Filter {
         performHysteresis(low, high);
         thresholdEdges();
         writeEdges(data);
+
     }
 
     private void initArrays() {

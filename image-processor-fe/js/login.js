@@ -20,7 +20,7 @@ function handleResponse(xhr) {
             errorElement.appendChild(document.createTextNode(xhr.response));
         }
     } else if (xhr.status == 200) {
-        window.location.replace("index.php");
+        window.location.replace("index.html");
     }
 }
 

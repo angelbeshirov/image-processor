@@ -73,7 +73,7 @@ function addActionsToFile() {
     }));
     divChild.appendChild(createA("Отвори", "#", function(event) {
         var fileName = getParentN(event.target, 4).querySelector(".column1").innerHTML;
-        window.location = "editor.php?file=" + fileName;
+        window.location = "editor.html?file=" + fileName;
     }));
     divChild.appendChild(createA("Изтегли", "#", function(event) {
         var fileName = getParentN(event.target, 4).querySelector(".column1").innerHTML;

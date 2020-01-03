@@ -18,7 +18,7 @@ function populateNavigation(xhr) {
 function addNavigationElementsForNotLoggedUser(ul) {
     var liHome = document.createElement("li");
     var aHome = document.createElement("a");
-    aHome.href = "index.php";
+    aHome.href = "index.html";
     aHome.classList.add("navigation");
     aHome.classList.add("fas");
     aHome.classList.add("fa-home");
@@ -26,13 +26,13 @@ function addNavigationElementsForNotLoggedUser(ul) {
     var liLogin = document.createElement("li");
     var aLogin = document.createElement("a");
     aLogin.innerHTML = "Вход";
-    aLogin.href = "login.php";
+    aLogin.href = "login.html";
     aLogin.classList.add("navigation");
 
     var liRegister = document.createElement("li");
     var aRegister = document.createElement("a");
     aRegister.innerHTML = "Регистрация";
-    aRegister.href = "register.php";
+    aRegister.href = "register.html";
     aRegister.classList.add("navigation");
 
     liRegister.appendChild(aRegister);
@@ -47,7 +47,7 @@ function addNavigationElementsForNotLoggedUser(ul) {
 function addNavigationElementsForLoggedUser(ul) {
     var liHome = document.createElement("li");
     var aHome = document.createElement("a");
-    aHome.href = "index.php";
+    aHome.href = "index.html";
     aHome.classList.add("navigation");
     aHome.classList.add("fas");
     aHome.classList.add("fa-home");
@@ -55,13 +55,13 @@ function addNavigationElementsForLoggedUser(ul) {
     var liMyEdits = document.createElement("li");
     var aMyEdits = document.createElement("a");
     aMyEdits.innerHTML = "Моите обработки";
-    aMyEdits.href = "my_edits.php";
+    aMyEdits.href = "my_edits.html";
     aMyEdits.classList.add("navigation");
 
     var liMyPhotos = document.createElement("li");
     var aMyPhotos = document.createElement("a");
     aMyPhotos.innerHTML = "Моите снимки";
-    aMyPhotos.href = "my_photos.php";
+    aMyPhotos.href = "my_photos.html";
     aMyPhotos.classList.add("navigation");
 
     var liLogout = document.createElement("li");
@@ -86,6 +86,6 @@ function addNavigationElementsForLoggedUser(ul) {
 
 function handleResponseFromLogout(xhr) {
     if (xhr.status == 200) {
-        window.location = "index.php";
+        window.location = "index.html";
     }
 }

@@ -39,8 +39,6 @@ import java.util.stream.Stream;
 /**
  * @author angel.beshirov
  */
-// TODO this whole controller ideally should be in a separate spring boot application image-manager-api
-// TODO but this adds complexity to cookie and session sharing
 @Controller
 @RequestMapping("/images")
 public class ImageController {
@@ -52,8 +50,6 @@ public class ImageController {
     private final ObjectMapper objectMapper;
     private final String directory;
 
-
-    // TODO why the HTTPONLY SECURE COOKIE IS NOT AVAILABLE IN THIS CLASS (reason why I am using the session)
     @Autowired
     public ImageController(final ImageService imageService,
                            final ExtensionService extensionService,
@@ -66,8 +62,7 @@ public class ImageController {
     }
 
     /**
-     * TODO THINK HOW TO FIX (Store cookies and session in db?/ or make rest call when logged in to another end point)
-     * Bug: When stopped the session is destroyed, but the cookies remain, so the user is logged in but can not upload files
+     * When stopped the session is destroyed, but the cookies remain, so the user is logged in but can not upload files
      */
     @ResponseBody
     @PostMapping(value = "/upload")

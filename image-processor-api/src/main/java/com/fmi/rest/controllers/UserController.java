@@ -120,12 +120,6 @@ public class UserController {
     }
 
     @ResponseBody
-    @GetMapping("/all")
-    public Iterable<User> getAllUsers() {
-        return userService.findAllUsers();
-    }
-
-    @ResponseBody
     @GetMapping("/find-by-email")
     public User findByEmail(@RequestParam(name = "email") final String email) {
         return userService.findByEmail(email);

@@ -1,6 +1,6 @@
 package com.fmi.process.kafka;
 
-import com.fmi.process.compression.algorithms.Algorithm;
+import com.fmi.process.compression.Algorithm;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;

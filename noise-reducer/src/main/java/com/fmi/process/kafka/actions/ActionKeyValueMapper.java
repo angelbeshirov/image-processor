@@ -1,6 +1,6 @@
 package com.fmi.process.kafka.actions;
 
-import com.fmi.process.noise.diffusion.filters.Filter;
+import com.fmi.process.filters.Filter;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;
@@ -48,13 +48,13 @@ public class ActionKeyValueMapper implements KeyValueMapper<String, byte[], KeyV
         try (final InputStream is = new ByteArrayInputStream(data);
              final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             final BufferedImage bufferedImage = ImageIO.read(is);
-            final BufferedImage compressedImage = filter.filter(bufferedImage);
+            final BufferedImage filteredImage = filter.filter(bufferedImage);
 
             final String format = fileLocation.substring(fileLocation.indexOf(DOT) + 1);
             final String outputLocation = fileLocation.substring(0, fileLocation.lastIndexOf(FILE_SEPARATOR)) + FILE_SEPARATOR +
                     RESULTS_DIRECTORY + getFileResultName(fileLocation, format);
 
-            ImageIO.write(compressedImage, format, baos);
+            ImageIO.write(filteredImage, format, baos);
             baos.flush();
 
             result = new KeyValue<>(outputLocation, baos.toByteArray());

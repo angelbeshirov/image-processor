@@ -1,7 +1,7 @@
 package com.fmi.process.kafka;
 
-import com.fmi.process.converter.BlackAndWhiteConverter;
-import com.fmi.process.converter.GrayConverter;
+import com.fmi.process.converters.BlackAndWhiteConverter;
+import com.fmi.process.converters.GrayConverter;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;

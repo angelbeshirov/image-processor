@@ -1,4 +1,4 @@
-package com.fmi.process.noise.util;
+package com.fmi.process.util;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;

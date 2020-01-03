@@ -38,8 +38,6 @@ public class ImageService {
         String basePath = null;
         Iterable<Image> images = imageRepository.findAllByUploadedBy(uploadedBy);
         if (images != null && images.iterator().hasNext()) {
-            // this is with the assumption that all images will be stored @ 1 place
-            // and the results are stored @ a child directory of this one, can be changed in future if enough time
             basePath = images.iterator().next().getLocation();
             if (basePath != null) {
                 basePath = basePath.substring(0, basePath.lastIndexOf(Constants.FILE_SEPARATOR));

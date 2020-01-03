@@ -1,4 +1,4 @@
-package com.fmi.process.converter;
+package com.fmi.process.converters;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

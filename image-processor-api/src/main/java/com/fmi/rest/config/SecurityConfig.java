@@ -30,7 +30,7 @@ import java.util.Properties;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final static String BOOTSTRAP_SERVERS = "localhost:9092"; // TODO should come from application.properties
+    private final static String BOOTSTRAP_SERVERS = "localhost:9092";
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {

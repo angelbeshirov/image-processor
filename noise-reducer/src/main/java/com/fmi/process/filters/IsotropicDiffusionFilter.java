@@ -1,6 +1,6 @@
-package com.fmi.process.noise.diffusion.filters;
+package com.fmi.process.filters;
 
-import com.fmi.process.noise.util.Util;
+import com.fmi.process.util.Util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,9 +1,9 @@
 package com.fmi.process.kafka;
 
 import com.fmi.process.kafka.actions.ActionKeyValueMapper;
-import com.fmi.process.noise.diffusion.filters.CannyEdgeFilter;
-import com.fmi.process.noise.diffusion.filters.IsotropicDiffusionFilter;
-import com.fmi.process.noise.diffusion.filters.MirrorFilter;
+import com.fmi.process.filters.CannyEdgeFilter;
+import com.fmi.process.filters.IsotropicDiffusionFilter;
+import com.fmi.process.filters.MirrorFilter;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;

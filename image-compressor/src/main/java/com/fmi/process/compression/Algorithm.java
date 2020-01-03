@@ -1,4 +1,4 @@
-package com.fmi.process.compression.algorithms;
+package com.fmi.process.compression;
 
 import java.awt.image.BufferedImage;
 

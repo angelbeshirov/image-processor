@@ -1,6 +1,6 @@
 package com.fmi.process.kafka;
 
-import com.fmi.process.compression.algorithms.SingularValueDecomposition;
+import com.fmi.process.compression.SingularValueDecomposition;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;

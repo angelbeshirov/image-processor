@@ -62,8 +62,6 @@ public class TaskController {
             try {
                 final Task task = objectMapper.readValue(payload, Task.class);
                 final String location = imageService.findImageLocation(id, task.getFileName());
-                //final String directoryLocation = location.substring(0, location.indexOf(task.getFileName()));
-                //+ "results" + FILE_SEPARATOR + task.getFileName();
                 final File file = new File(location);
                 try (final InputStream in = new FileInputStream(file)) {
                     byte[] data = IOUtils.toByteArray(in);

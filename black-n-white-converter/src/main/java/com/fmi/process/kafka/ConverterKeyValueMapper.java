@@ -1,6 +1,6 @@
 package com.fmi.process.kafka;
 
-import com.fmi.process.converter.Converter;
+import com.fmi.process.converters.Converter;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.slf4j.Logger;

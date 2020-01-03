@@ -1,4 +1,4 @@
-package com.fmi.process.compression.algorithms;
+package com.fmi.process.compression;
 
 import org.ojalgo.matrix.decomposition.SingularValue;
 import org.ojalgo.matrix.store.MatrixStore;

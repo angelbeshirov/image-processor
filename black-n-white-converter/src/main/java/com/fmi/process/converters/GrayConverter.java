@@ -1,4 +1,4 @@
-package com.fmi.process.converter;
+package com.fmi.process.converters;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
